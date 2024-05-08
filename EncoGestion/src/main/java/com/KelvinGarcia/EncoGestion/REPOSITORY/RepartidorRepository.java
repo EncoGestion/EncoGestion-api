@@ -10,4 +10,6 @@ public interface RepartidorRepository extends JpaRepository<Repartidor, Long> {
 
     @Query("SELECT r FROM Repartidor r WHERE r.id=:repartidorID")
     List<Repartidor> buscarRepartidorPorID(@Param("repartidorID") Long repartidorID);
+    @Query("SELECT r FROM Repartidor r WHERE r.nombre=:nombreRepartidor")
+    Repartidor inicioSesionRepartidor(@Param("nombreRepartidor") String nombreRepartidor);
 }
