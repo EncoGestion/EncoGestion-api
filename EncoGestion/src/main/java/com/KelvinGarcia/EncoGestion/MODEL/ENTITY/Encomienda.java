@@ -3,7 +3,6 @@ package com.KelvinGarcia.EncoGestion.MODEL.ENTITY;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.core.annotation.Order;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
