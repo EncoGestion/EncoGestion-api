@@ -1,6 +1,5 @@
 package com.KelvinGarcia.EncoGestion.SERVICE;
 
-
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
@@ -22,6 +21,24 @@ public class EncomiendaService {
     private final EncomiendaRepository encomiendaRepository;
     private final ClienteRepository clienteRepository;
     private final EncomiendaMapper encomiendaMapper;
+
+    @Transactional(readOnly = true)
+    public List<EncomiendaResponseDTO> getAllEncomiendas() {
+        List<Encomienda> encomiendas = encomiendaRepository.findAll();
+        return encomiendaMapper.convertToListDTO(encomiendas);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EncomiendaResponseDTO> getEncomiendasByClienteId(String id) {
+        List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromCliente(id);
+        return encomiendaMapper.convertToListDTO(encomiendas);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EncomiendaResponseDTO> getEncomiendasByRepartidorId(String id) {
+        List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromRepartidor(id);
+        return encomiendaMapper.convertToListDTO(encomiendas);
+    }
 
     @Transactional(readOnly = true)
     public List<EncomiendaResponseDTO> buscarEncomiendaDeClientePorFecha(LocalDate fecha, String clienteID) {

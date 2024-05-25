@@ -8,9 +8,24 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-
 public interface EncomiendaRepository extends JpaRepository<Encomienda, Long> {
+
+
+    @Query("SELECT e FROM Encomienda e WHERE e.id=:encomiendaID")
+    Encomienda findBySourceOrEncomiendaID(@Param("encomiendaID") Long encomiendaID);
+
+    @Query("SELECT e.fecha, COUNT(e) FROM Encomienda  e WHERE e.fecha BETWEEN :fechaInicio AND :fechaFin AND (e.id=:encomiendaID) GROUP BY e.fecha")
+    List<Object[]> getEncomiendaByDateRangeAndEncomiendaID(@Param("fechaInicio") LocalDate fechaInicio,
+                                                           @Param("fechaFin") LocalDate fechaFin,
+                                                           @Param("encomiendaID") Long encomiendaID);
+
+    @Query("SELECT e FROM Encomienda e JOIN e.cliente c WHERE c.id = :clienteID")
+    List<Encomienda> getEncomiendaFromCliente(@Param("clienteID") String clienteID);
+
+    @Query("SELECT e FROM Encomienda e JOIN e.repartidor r WHERE r.id = :repartidorID")
+    List<Encomienda> getEncomiendaFromRepartidor(@Param("repartidorID") String repartidorID);
 
     @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.cliente=:cliente ")
     List<Encomienda> getEncomiendaByDateAndClienteID(@Param("fecha") LocalDate fecha, @Param("cliente") Cliente cliente);
+
 }
