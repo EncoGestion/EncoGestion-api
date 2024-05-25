@@ -1,4 +1,6 @@
 package com.KelvinGarcia.EncoGestion.MODEL.DTO;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,13 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RepartidorResponseDTO {
+public class RepartidorSesionDTO {
 
-    private String id;
+
+    @NotBlank(message = "El nombre no puede estar vacio")
     private String nombre;
+    @NotBlank(message = "La contraseña no puede estar vacia")
     private String contrasenia;
-    private String telefono;
-    private String correo;
-    private String estado;
-    private String ubiProvincia;
 }

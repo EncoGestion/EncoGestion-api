@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -33,4 +34,12 @@ public class EncomiendaController {
         List<EncomiendaResponseDTO> encomiendas = encomiendaService.getEncomiendasByRepartidorId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
+
+    @GetMapping("/clientes/{clienteID}")
+    public ResponseEntity<List<EncomiendaResponseDTO>> bucarEncomiendasPorCliente(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
+        List<EncomiendaResponseDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
+        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
+    }
+
 }
+

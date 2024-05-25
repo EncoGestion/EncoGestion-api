@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class EncomiendaMapper {
 
     private final ModelMapper modelMapper;
 
-    public Encomienda convertToEntiTy(EncomiendaRequestDTO encomiendaRequestDTO){
+    public Encomienda convertToEntity(EncomiendaRequestDTO encomiendaRequestDTO){
+
         return modelMapper.map(encomiendaRequestDTO, Encomienda.class);
     }
 
@@ -35,4 +37,5 @@ public class EncomiendaMapper {
         reportDTO.setId((Long) encomiendasData[1]);
         return reportDTO;
     }
+
 }
