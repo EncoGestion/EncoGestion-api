@@ -28,4 +28,5 @@ public interface EncomiendaRepository extends JpaRepository<Encomienda, Long> {
     @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.cliente=:cliente ")
     List<Encomienda> getEncomiendaByDateAndClienteID(@Param("fecha") LocalDate fecha, @Param("cliente") Cliente cliente);
 
+
 }
