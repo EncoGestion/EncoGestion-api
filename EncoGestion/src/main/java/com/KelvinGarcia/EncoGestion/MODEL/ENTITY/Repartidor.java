@@ -22,7 +22,7 @@ public class Repartidor {
     @Id
     @Column(name="id_repartidor",nullable = false, unique=true, columnDefinition = "VARCHAR(8)")
     private String id;
-    @Column(name="nombre",nullable = false, unique=true)
+    @Column(name="nombre",nullable = false)
     private String nombre;
     @Column(name="contrasenia",nullable = false)
     private String contrasenia;

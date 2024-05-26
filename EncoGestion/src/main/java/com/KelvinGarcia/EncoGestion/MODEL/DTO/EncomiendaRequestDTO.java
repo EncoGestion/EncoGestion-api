@@ -22,6 +22,10 @@ public class EncomiendaRequestDTO {
     private String proDestino;
     @NotBlank(message = "El distrito de destino no puede estar vacio")
     private String disDestino;
+    @NotBlank(message = "La contraseña no puede estar vacia")
+    private String contraseña;
     @Nullable
     private String direccion;
+    @NotBlank(message = "Tienes que ingresar el DNI del destinatario")
+    private String clienteDestinatario;
 }

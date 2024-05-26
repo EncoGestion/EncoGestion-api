@@ -49,5 +49,11 @@ public class EncomiendaController {
         return ResponseEntity.ok(encomiendaActualizada);
     }
 
+    @GetMapping("/repartidores/asignacion/{proOrigen}")
+    public ResponseEntity<List<EncomiendaResponseDTO>> asignarEncomiendasPorProOrigen(@PathVariable String proOrigen, @RequestParam("estado") String estado, @RequestParam("id_repartidor") String id_repartidor) {
+        List<EncomiendaResponseDTO> encomiendas = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
+        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
+    }
+
 }
 
