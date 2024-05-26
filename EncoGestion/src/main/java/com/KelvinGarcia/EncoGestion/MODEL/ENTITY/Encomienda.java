@@ -32,6 +32,8 @@ public class Encomienda {
     private String proDestino;
     @Column(name="dis_destino", nullable=false)
     private String disDestino;
+    @Column(name="contraseña", nullable=false)
+    private String contraseña;
     @Column(name="direccion")
     private String direccion;
     @Column(name="fecha")
@@ -40,9 +42,11 @@ public class Encomienda {
     private LocalTime hora;
     @Column(name="estado", columnDefinition = "VARCHAR(255) DEFAULT 'En espera'" )
     private String estado;
+    @Column(name="id_cliente_destinatario", nullable=false)
+    private String clienteDestinatario;
     @ManyToOne
-    @JoinColumn(name="id_cliente", nullable=false)
-    private Cliente cliente;
+    @JoinColumn(name="id_cliente_remitente", nullable=false)
+    private Cliente clienteRemitente;
     @ManyToOne
     @JoinColumn(name="id_repartidor")
     private Repartidor repartidor;
