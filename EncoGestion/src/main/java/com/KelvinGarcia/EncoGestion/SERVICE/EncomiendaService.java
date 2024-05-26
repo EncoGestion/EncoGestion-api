@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -56,6 +58,14 @@ public class EncomiendaService {
         return encomiendaMapper.convertToListDTO(encomiendas);
     }
 
+    public Encomienda actualizarEstado(Long id, String nuevoEstado) {
+        Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new RuntimeException("Encomienda no encontrada"));
+        encomienda.setEstado(nuevoEstado);
+        encomienda.setFecha(LocalDate.now());
+        encomienda.setHora(LocalTime.now());
+        return encomiendaRepository.save(encomienda);
+    }
+
     @Transactional
     public List<EncomiendaResponseDTO> asignarEncomienda(String proOrigen, String estado, String id_empleado) {
         List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado);
@@ -75,4 +85,5 @@ public class EncomiendaService {
         }
         return encomiendaMapper.convertToListDTO(encomiendas);
     }
+
 }
