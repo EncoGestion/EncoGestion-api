@@ -1,8 +1,6 @@
 package com.KelvinGarcia.EncoGestion.MAPPER;
 
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaReportDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaRequestDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,6 +15,8 @@ import java.util.List;
 public class EncomiendaMapper {
 
     private final ModelMapper modelMapper;
+    private final ClienteMapper clienteMapper;
+    private final RepartidorMapper repartidorMapper;
 
     public Encomienda convertToEntity(EncomiendaRequestDTO encomiendaRequestDTO){
 
@@ -36,6 +36,15 @@ public class EncomiendaMapper {
         reportDTO.setFecha((LocalDate) encomiendasData[0]);
         reportDTO.setId((Long) encomiendasData[1]);
         return reportDTO;
+    }
+
+    public EncomiendaHistorialDTO convertToHistorialDTO(Encomienda encomienda, List<PaqueteResponseDTO> paquetes, List<SobreResponseDTO> sobres){
+
+            EncomiendaHistorialDTO historialDTO = modelMapper.map(encomienda, EncomiendaHistorialDTO.class);
+            historialDTO.setPaquetes(paquetes);
+            historialDTO.setSobres(sobres);
+
+            return historialDTO;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.CONTROLLER;
 
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.ActualizarEstadoEncomiendaDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
@@ -26,8 +27,8 @@ public class EncomiendaController {
     }
 
     @GetMapping("/clientes/{id}")
-    public ResponseEntity<List<EncomiendaResponseDTO>> getAllEncomiendasByCliente(@PathVariable String id) {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.getEncomiendasByClienteId(id);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByCliente(@PathVariable String id) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByClienteId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
@@ -37,7 +38,7 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
-    @GetMapping("/clientes/{clienteID}")
+    @GetMapping("/clientes/fecha/{clienteID}")
     public ResponseEntity<List<EncomiendaResponseDTO>> bucarEncomiendasPorCliente(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
         List<EncomiendaResponseDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
