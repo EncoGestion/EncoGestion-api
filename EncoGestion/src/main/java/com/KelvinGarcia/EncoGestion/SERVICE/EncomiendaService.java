@@ -2,10 +2,11 @@ package com.KelvinGarcia.EncoGestion.SERVICE;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Repartidor;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.*;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.RepartidorRepository;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +27,8 @@ public class EncomiendaService {
     private final ClienteRepository clienteRepository;
     private final RepartidorRepository repartidorRepository;
     private final EncomiendaMapper encomiendaMapper;
+    private final PaqueteService paqueteService;
+    private final SobreService sobreService;
 
     @Transactional(readOnly = true)
     public List<EncomiendaResponseDTO> getAllEncomiendas() {
@@ -34,9 +37,20 @@ public class EncomiendaService {
     }
 
     @Transactional(readOnly = true)
-    public List<EncomiendaResponseDTO> getEncomiendasByClienteId(String id) {
+    public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromCliente(id);
-        return encomiendaMapper.convertToListDTO(encomiendas);
+        if(encomiendas.isEmpty()){
+            throw new ResourceNotFoundException("No hay encomiendas para el DNI:  "+id+" o no existe el usuario");
+        }
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+
+        for (Encomienda encomienda : encomiendas) {
+            List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+            List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+            EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+            encomiendaHistorialDTOs.add(historialDTO);
+        }
+        return encomiendaHistorialDTOs;
     }
 
     @Transactional(readOnly = true)
