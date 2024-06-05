@@ -6,11 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EncomiendaResponseDTO {
+public class EncomiendaHistorialDTO {
 
     private Long id;
     private String depOrigen;
@@ -24,7 +25,9 @@ public class EncomiendaResponseDTO {
     private LocalDate fecha;
     private LocalTime hora;
     private String estado;
-    private String clienteDestiantario;
+    private String clienteDestinatario;
     private ClienteResponseDTO  clienteRemitente;
     private RepartidorResponseDTO repartidor;
+    private List<PaqueteResponseDTO> paquetes;
+    private List<SobreResponseDTO> sobres;
 }

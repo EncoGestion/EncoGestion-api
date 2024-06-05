@@ -33,6 +33,8 @@ public class Encomienda {
     private String proDestino;
     @Column(name="dis_destino", nullable=false)
     private String disDestino;
+    @Column(name="contraseña", nullable=false)
+    private String contraseña;
     @Column(name="direccion")
     private String direccion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
