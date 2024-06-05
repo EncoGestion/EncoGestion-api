@@ -56,6 +56,17 @@ public class EncomiendaService {
     @Transactional(readOnly = true)
     public List<EncomiendaResponseDTO> getEncomiendasByRepartidorId(String id) {
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromRepartidor(id);
+        if(encomiendas.isEmpty()){
+            throw new ResourceNotFoundException("El repartidor mo tiene encomiendas o no existe");
+        }
+      List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+
+        for (Encomienda encomienda : encomiendas) {
+            List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+            List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+            EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+            encomiendaHistorialDTOs.add(historialDTO);
+        }
         return encomiendaMapper.convertToListDTO(encomiendas);
     }
 
