@@ -4,7 +4,6 @@ package com.KelvinGarcia.EncoGestion.MODEL.ENTITY;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.core.annotation.Order;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

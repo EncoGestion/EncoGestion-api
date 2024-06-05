@@ -1,5 +1,7 @@
 package com.KelvinGarcia.EncoGestion.MODEL.DTO;
 
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Repartidor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,4 +27,5 @@ public class EncomiendaResponseDTO {
     private LocalDate fecha;
     private LocalTime hora;
     private String estado;
+
 }
