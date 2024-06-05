@@ -35,7 +35,7 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
-    @GetMapping("/clientes/{clienteID}")
+    @GetMapping("/clientes/fecha/{clienteID}")
     public ResponseEntity<List<EncomiendaResponseDTO>> bucarEncomiendasPorCliente(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
         List<EncomiendaResponseDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
