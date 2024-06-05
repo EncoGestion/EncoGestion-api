@@ -20,7 +20,7 @@ public class Cliente {
     @Id
     @Column(name="id_cliente", nullable=false, unique=true, columnDefinition = "VARCHAR(8)")
     private String id;
-    @Column(name="nombre", nullable=false, unique=true)
+    @Column(name="nombre", nullable=false)
     private String nombre;
     @Column(name="contrasenia", nullable=false)
     private String contrasenia;
