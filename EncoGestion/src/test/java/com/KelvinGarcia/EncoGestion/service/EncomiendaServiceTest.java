@@ -2,10 +2,15 @@ package com.KelvinGarcia.EncoGestion.service;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
+import com.KelvinGarcia.EncoGestion.SERVICE.PaqueteService;
+import com.KelvinGarcia.EncoGestion.SERVICE.SobreService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,32 +34,58 @@ public class EncomiendaServiceTest {
     private EncomiendaMapper encomiendaMapper;
     @InjectMocks
     private EncomiendaService encomiendaService;
+    @Mock
+    private PaqueteService paqueteService;
+    @Mock
+    private SobreService sobreService;
+
 
     @Test
     public void testGetEncomiendasByClienteId_EncomiendaExiste(){
 
         String id = "12345";
+
         Encomienda encomienda1 = new Encomienda();
         Encomienda encomienda2 = new Encomienda();
-        List<Encomienda> encomiendas = new ArrayList<>();
-        encomiendas.add(encomienda1);
-        encomiendas.add(encomienda2);
+        List<Encomienda> encomiendas = Arrays.asList(encomienda1, encomienda2);
 
         when(encomiendaRepository.getEncomiendaFromCliente(id)).thenReturn(encomiendas);
 
-        List<EncomiendaResponseDTO> encomiendaResponseDTOS = new ArrayList<>();
-        EncomiendaResponseDTO encomiendaResponseDTO1 = new EncomiendaResponseDTO();
-        EncomiendaResponseDTO encomiendaResponseDTO2 = new EncomiendaResponseDTO();
-        encomiendaResponseDTOS.add(encomiendaResponseDTO1);
-        encomiendaResponseDTOS.add(encomiendaResponseDTO2);
+        PaqueteResponseDTO paquete1 = new PaqueteResponseDTO();
+        PaqueteResponseDTO paquete2 = new PaqueteResponseDTO();
+        List<PaqueteResponseDTO> paquetes = Arrays.asList(paquete1, paquete2);
 
-        when(encomiendaMapper.convertToListDTO(encomiendas)).thenReturn(encomiendaResponseDTOS);
+        when(paqueteService.devolverPaquetes(encomienda1)).thenReturn(paquetes);
+        when(paqueteService.devolverPaquetes(encomienda2)).thenReturn(paquetes);
 
-        List<EncomiendaResponseDTO> resultado = encomiendaService.getEncomiendasByClienteId(id);
+        SobreResponseDTO sobre1 = new SobreResponseDTO();
+        SobreResponseDTO sobre2 = new SobreResponseDTO();
+        List<SobreResponseDTO> sobres = Arrays.asList(sobre1, sobre2);
+
+        when(sobreService.devolverSobres(encomienda1)).thenReturn(sobres);
+        when(sobreService.devolverSobres(encomienda2)).thenReturn(sobres);
+
+        EncomiendaHistorialDTO historialDTO1 = new EncomiendaHistorialDTO();
+        EncomiendaHistorialDTO historialDTO2 = new EncomiendaHistorialDTO();
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = Arrays.asList(historialDTO1, historialDTO2);
+
+        when(encomiendaRepository.getEncomiendaFromCliente(id)).thenReturn(encomiendas);
+
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOS = new ArrayList<>();
+        EncomiendaHistorialDTO encomiendaHistorialDTO1 = new EncomiendaHistorialDTO();
+        EncomiendaHistorialDTO encomiendaHistorialDTO2 = new EncomiendaHistorialDTO();
+        encomiendaHistorialDTOS.add(encomiendaHistorialDTO1);
+        encomiendaHistorialDTOS.add(encomiendaHistorialDTO2);
+
+        when(encomiendaMapper.convertToHistorialDTO(encomienda1, paquetes, sobres)).thenReturn(historialDTO1);
+        when(encomiendaMapper.convertToHistorialDTO(encomienda2, paquetes, sobres)).thenReturn(historialDTO2);
+
+        List<EncomiendaHistorialDTO> resultado = encomiendaService.getEncomiendasByClienteId(id);
 
         assertNotNull(resultado);
-        assertEquals(encomiendaResponseDTOS, resultado);
+        assertEquals(encomiendaHistorialDTOs, resultado);
     }
+
 
     @Test
     public void testGetEncomiendasByClienteId_EncomiendaNoExiste(){
@@ -68,27 +100,48 @@ public class EncomiendaServiceTest {
     public void testGetEncomiendasByRepartidorId_EncomiendaExiste(){
 
         String id = "12345";
+
         Encomienda encomienda1 = new Encomienda();
         Encomienda encomienda2 = new Encomienda();
-        List<Encomienda> encomiendas = new ArrayList<>();
-        encomiendas.add(encomienda1);
-        encomiendas.add(encomienda2);
+        List<Encomienda> encomiendas = Arrays.asList(encomienda1, encomienda2);
 
         when(encomiendaRepository.getEncomiendaFromRepartidor(id)).thenReturn(encomiendas);
 
-        List<EncomiendaResponseDTO> encomiendaResponseDTOS = new ArrayList<>();
-        EncomiendaResponseDTO encomiendaResponseDTO1 = new EncomiendaResponseDTO();
-        EncomiendaResponseDTO encomiendaResponseDTO2 = new EncomiendaResponseDTO();
-        encomiendaResponseDTOS.add(encomiendaResponseDTO1);
-        encomiendaResponseDTOS.add(encomiendaResponseDTO2);
+        PaqueteResponseDTO paquete1 = new PaqueteResponseDTO();
+        PaqueteResponseDTO paquete2 = new PaqueteResponseDTO();
+        List<PaqueteResponseDTO> paquetes = Arrays.asList(paquete1, paquete2);
 
-        when(encomiendaMapper.convertToListDTO(encomiendas)).thenReturn(encomiendaResponseDTOS);
+        when(paqueteService.devolverPaquetes(encomienda1)).thenReturn(paquetes);
+        when(paqueteService.devolverPaquetes(encomienda2)).thenReturn(paquetes);
 
-        List<EncomiendaResponseDTO> resultado = encomiendaService.getEncomiendasByRepartidorId(id);
+        SobreResponseDTO sobre1 = new SobreResponseDTO();
+        SobreResponseDTO sobre2 = new SobreResponseDTO();
+        List<SobreResponseDTO> sobres = Arrays.asList(sobre1, sobre2);
+
+        when(sobreService.devolverSobres(encomienda1)).thenReturn(sobres);
+        when(sobreService.devolverSobres(encomienda2)).thenReturn(sobres);
+
+        EncomiendaHistorialDTO historialDTO1 = new EncomiendaHistorialDTO();
+        EncomiendaHistorialDTO historialDTO2 = new EncomiendaHistorialDTO();
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = Arrays.asList(historialDTO1, historialDTO2);
+
+        when(encomiendaRepository.getEncomiendaFromRepartidor(id)).thenReturn(encomiendas);
+
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOS = new ArrayList<>();
+        EncomiendaHistorialDTO encomiendaHistorialDTO1 = new EncomiendaHistorialDTO();
+        EncomiendaHistorialDTO encomiendaHistorialDTO2 = new EncomiendaHistorialDTO();
+        encomiendaHistorialDTOS.add(encomiendaHistorialDTO1);
+        encomiendaHistorialDTOS.add(encomiendaHistorialDTO2);
+
+        when(encomiendaMapper.convertToHistorialDTO(encomienda1, paquetes, sobres)).thenReturn(historialDTO1);
+        when(encomiendaMapper.convertToHistorialDTO(encomienda2, paquetes, sobres)).thenReturn(historialDTO2);
+
+        List<EncomiendaHistorialDTO> resultado = encomiendaService.getEncomiendasByRepartidorId(id);
 
         assertNotNull(resultado);
-        assertEquals(encomiendaResponseDTOS, resultado);
+        assertEquals(encomiendaHistorialDTOs, resultado);
     }
+
 
     @Test
     public void testGetEncomiendasByRepartidorId_EncomiendaNoExiste(){
