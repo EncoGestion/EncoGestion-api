@@ -33,8 +33,8 @@ public class EncomiendaController {
     }
 
     @GetMapping("/repartidores/{id}")
-    public ResponseEntity<List<EncomiendaResponseDTO>> getAllEncomiendasByRepartidor(@PathVariable String id) {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.getEncomiendasByRepartidorId(id);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByRepartidor(@PathVariable String id) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByRepartidorId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
