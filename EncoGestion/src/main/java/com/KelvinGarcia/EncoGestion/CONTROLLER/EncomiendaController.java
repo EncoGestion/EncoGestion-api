@@ -1,13 +1,12 @@
 package com.KelvinGarcia.EncoGestion.CONTROLLER;
 
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.ActualizarEstadoEncomiendaDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -56,5 +55,10 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
+    @PostMapping
+    public ResponseEntity<EncomiendaResponseDTO> crearEncomienda(@Validated @RequestBody EncomiendaRequestDTO encomiendaRequestDTO, @RequestParam("clienteRemitente") String clienteRemitente){
+        EncomiendaResponseDTO encomienda = encomiendaService.crearEncomienda(encomiendaRequestDTO, clienteRemitente);
+        return new ResponseEntity<>(encomienda, HttpStatus.CREATED);
+    }
 }
 

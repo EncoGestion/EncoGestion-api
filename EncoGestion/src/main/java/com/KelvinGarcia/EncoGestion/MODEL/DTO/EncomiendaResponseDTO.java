@@ -24,7 +24,7 @@ public class EncomiendaResponseDTO {
     private LocalDate fecha;
     private LocalTime hora;
     private String estado;
-    private String clienteDestiantario;
+    private String clienteDestinatario;
     private ClienteResponseDTO  clienteRemitente;
     private RepartidorResponseDTO repartidor;
 }
