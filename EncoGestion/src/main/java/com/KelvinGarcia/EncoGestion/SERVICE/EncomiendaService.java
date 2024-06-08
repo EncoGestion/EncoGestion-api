@@ -110,7 +110,7 @@ public class EncomiendaService {
     }
 
     @Transactional
-    public EncomiendaResponseDTO crearEncomienda(EncomiendaRequestDTO encomiendaRequestDTO, String idCliente) {
+    public EncomiendaResponseDTO registrarEncomienda(EncomiendaRequestDTO encomiendaRequestDTO, String idCliente) {
         Long id;
         Encomienda encomiendaPrueba;
         Encomienda encomienda = new Encomienda();

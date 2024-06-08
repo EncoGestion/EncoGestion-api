@@ -7,7 +7,6 @@ import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.PaqueteRepository;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import com.KelvinGarcia.EncoGestion.SERVICE.PaqueteService;
 import com.KelvinGarcia.EncoGestion.SERVICE.SobreService;
@@ -154,7 +153,7 @@ public class EncomiendaServiceTest {
     }
 
     @Test
-    public void testCrearEncomiendaClienteExiste(){
+    public void testRegistrarEncomiendaClienteExiste(){
         String id = "12345";
         Cliente cliente = new Cliente();
         cliente.setId(id);
@@ -170,20 +169,20 @@ public class EncomiendaServiceTest {
 
         when(encomiendaMapper.convertToDTO(encomienda)).thenReturn(encomiendaResponseDTO);
 
-        EncomiendaResponseDTO response = encomiendaService.crearEncomienda(encomiendaRequestDTO, id);
+        EncomiendaResponseDTO response = encomiendaService.registrarEncomienda(encomiendaRequestDTO, id);
 
         assertNotNull(response);
         assertEquals(encomiendaResponseDTO, response);
     }
 
     @Test
-    public void testCrearEncomiendaClienteNoExiste(){
+    public void testRegistrarEncomiendaClienteNoExiste(){
 
     String id = "12345";
     EncomiendaRequestDTO encomiendaRequestDTO = new EncomiendaRequestDTO();
 
     when(clienteRepository.buscarPorId(id)).thenReturn(null);
 
-    assertThrows(ResourceNotFoundException.class, () -> encomiendaService.crearEncomienda(encomiendaRequestDTO, id));
+    assertThrows(ResourceNotFoundException.class, () -> encomiendaService.registrarEncomienda(encomiendaRequestDTO, id));
     }
 }
