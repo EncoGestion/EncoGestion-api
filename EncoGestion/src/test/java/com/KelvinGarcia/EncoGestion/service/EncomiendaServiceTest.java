@@ -2,8 +2,11 @@ package com.KelvinGarcia.EncoGestion.service;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
