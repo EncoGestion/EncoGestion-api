@@ -2,10 +2,7 @@ package com.KelvinGarcia.EncoGestion.SERVICE;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.*;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
@@ -59,7 +56,7 @@ public class EncomiendaService {
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("El repartidor mo tiene encomiendas o no existe");
         }
-      List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
 
         for (Encomienda encomienda : encomiendas) {
             List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
@@ -69,6 +66,7 @@ public class EncomiendaService {
         }
         return encomiendaHistorialDTOs;
     }
+
 
     @Transactional(readOnly = true)
     public List<EncomiendaResponseDTO> buscarEncomiendaDeClientePorFecha(LocalDate fecha, String clienteID) {
@@ -109,6 +107,31 @@ public class EncomiendaService {
 
         }
         return encomiendaMapper.convertToListDTO(encomiendas);
+    }
+
+    @Transactional
+    public EncomiendaResponseDTO crearEncomienda(EncomiendaRequestDTO encomiendaRequestDTO, String idCliente) {
+        Long id;
+        Encomienda encomiendaPrueba;
+        Encomienda encomienda = new Encomienda();
+        Cliente clienteRemitente = clienteRepository.buscarPorId(idCliente);
+
+        if(clienteRemitente==null){
+            throw new ResourceNotFoundException("Cliente no encontrado con el DNI: "+idCliente);
+        }
+        else{
+            do{
+                id = Math.round(Math.random()*1000000);
+                encomiendaPrueba = encomiendaRepository.findBySourceOrEncomiendaID(id);
+            }while(encomiendaPrueba!=null);
+
+            encomiendaRequestDTO.setId(id);
+            encomiendaRequestDTO.setClienteRemitente(clienteRemitente);
+            encomienda = encomiendaMapper.convertToEntity(encomiendaRequestDTO);
+            encomiendaRepository.save(encomienda);
+        }
+
+        return encomiendaMapper.convertToDTO(encomienda);
     }
 
 }

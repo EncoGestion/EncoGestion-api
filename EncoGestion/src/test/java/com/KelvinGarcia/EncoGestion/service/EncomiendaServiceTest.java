@@ -2,12 +2,12 @@ package com.KelvinGarcia.EncoGestion.service;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaHistorialDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.EncomiendaResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
+import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
+import com.KelvinGarcia.EncoGestion.REPOSITORY.PaqueteRepository;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import com.KelvinGarcia.EncoGestion.SERVICE.PaqueteService;
 import com.KelvinGarcia.EncoGestion.SERVICE.SobreService;
@@ -30,6 +30,8 @@ public class EncomiendaServiceTest {
 
     @Mock
     private EncomiendaRepository encomiendaRepository;
+    @Mock
+    private ClienteRepository clienteRepository;
     @Mock
     private EncomiendaMapper encomiendaMapper;
     @InjectMocks
@@ -84,6 +86,7 @@ public class EncomiendaServiceTest {
         assertNotNull(resultado);
         assertEquals(encomiendaHistorialDTOs, resultado);
     }
+
 
     @Test
     public void testGetEncomiendasByClienteId_EncomiendaNoExiste(){
@@ -140,6 +143,7 @@ public class EncomiendaServiceTest {
         assertEquals(encomiendaHistorialDTOs, resultado);
     }
 
+
     @Test
     public void testGetEncomiendasByRepartidorId_EncomiendaNoExiste(){
 
@@ -147,5 +151,39 @@ public class EncomiendaServiceTest {
         when(encomiendaRepository.getEncomiendaFromRepartidor(id)).thenReturn(Collections.emptyList());
 
         assertThrows(ResourceNotFoundException.class, () -> encomiendaService.getEncomiendasByRepartidorId(id));
+    }
+
+    @Test
+    public void testCrearEncomiendaClienteExiste(){
+        String id = "12345";
+        Cliente cliente = new Cliente();
+        cliente.setId(id);
+
+        when(clienteRepository.buscarPorId(id)).thenReturn(cliente);
+
+        EncomiendaRequestDTO encomiendaRequestDTO = new EncomiendaRequestDTO();
+        Encomienda encomienda = new Encomienda();
+
+        when(encomiendaMapper.convertToEntity(encomiendaRequestDTO)).thenReturn(encomienda);
+
+        EncomiendaResponseDTO encomiendaResponseDTO = new EncomiendaResponseDTO();
+
+        when(encomiendaMapper.convertToDTO(encomienda)).thenReturn(encomiendaResponseDTO);
+
+        EncomiendaResponseDTO response = encomiendaService.crearEncomienda(encomiendaRequestDTO, id);
+
+        assertNotNull(response);
+        assertEquals(encomiendaResponseDTO, response);
+    }
+
+    @Test
+    public void testCrearEncomiendaClienteNoExiste(){
+
+    String id = "12345";
+    EncomiendaRequestDTO encomiendaRequestDTO = new EncomiendaRequestDTO();
+
+    when(clienteRepository.buscarPorId(id)).thenReturn(null);
+
+    assertThrows(ResourceNotFoundException.class, () -> encomiendaService.crearEncomienda(encomiendaRequestDTO, id));
     }
 }
