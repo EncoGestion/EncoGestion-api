@@ -43,7 +43,7 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/estado")
+    @PatchMapping("/{id}/estado")
     public ResponseEntity<Encomienda> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
         Encomienda encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
         return ResponseEntity.ok(encomiendaActualizada);

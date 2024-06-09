@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.CONFIG;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.BadRequestException;
+import com.KelvinGarcia.EncoGestion.EXCEPTION.ContraseñaEnUsoException;
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -10,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +49,8 @@ public class RestExceptionHanlder {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-
-
-
+    @ExceptionHandler(ContraseñaEnUsoException.class)
+    public ProblemDetail handleContraseñaEnUsoException(ContraseñaEnUsoException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 }
