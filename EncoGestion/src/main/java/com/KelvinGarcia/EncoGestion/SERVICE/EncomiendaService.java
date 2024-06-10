@@ -28,24 +28,40 @@ public class EncomiendaService {
     private final SobreService sobreService;
 
     @Transactional(readOnly = true)
-    public List<EncomiendaResponseDTO> getAllEncomiendas() {
+    public List<EncomiendaHistorialDTO> getAllEncomiendas() {
         List<Encomienda> encomiendas = encomiendaRepository.findAll();
-        return encomiendaMapper.convertToListDTO(encomiendas);
+
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+
+        if(encomiendas.isEmpty()) {
+           throw new ResourceNotFoundException("No hay encomiendas");
+        }
+        else{
+            for(Encomienda encomienda : encomiendas) {
+                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+                encomiendaHistorialDTOs.add(historialDTO);
+            }
+        }
+
+        return encomiendaHistorialDTOs;
     }
 
     @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromCliente(id);
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("No hay encomiendas para el DNI:  "+id+" o no existe el usuario");
         }
-        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
-
-        for (Encomienda encomienda : encomiendas) {
-            List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
-            List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
-            EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
-            encomiendaHistorialDTOs.add(historialDTO);
+        else{
+            for (Encomienda encomienda : encomiendas) {
+                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+                encomiendaHistorialDTOs.add(historialDTO);
+            }
         }
         return encomiendaHistorialDTOs;
     }
@@ -53,34 +69,47 @@ public class EncomiendaService {
     @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByRepartidorId(String id) {
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromRepartidor(id);
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("El repartidor mo tiene encomiendas o no existe");
         }
-        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
-
-        for (Encomienda encomienda : encomiendas) {
-            List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
-            List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
-            EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
-            encomiendaHistorialDTOs.add(historialDTO);
+        else{
+            for (Encomienda encomienda : encomiendas) {
+                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+                encomiendaHistorialDTOs.add(historialDTO);
+            }
         }
         return encomiendaHistorialDTOs;
     }
 
 
     @Transactional(readOnly = true)
-    public List<EncomiendaResponseDTO> buscarEncomiendaDeClientePorFecha(LocalDate fecha, String clienteID) {
+    public List<EncomiendaHistorialDTO> buscarEncomiendaDeClientePorFecha(LocalDate fecha, String clienteID) {
 
         Cliente cliente = clienteRepository.findById(clienteID)
                 .orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el id: "+clienteID));
 
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaByDateAndClienteID(fecha, cliente);
+
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+
         if (encomiendas.isEmpty()) {
             throw new ResourceNotFoundException("No se encontraron encomiendas para el cliente con DNI " + clienteID + " en la fecha " + fecha);
         }
-        return encomiendaMapper.convertToListDTO(encomiendas);
+        else{
+            for (Encomienda encomienda : encomiendas) {
+                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+                encomiendaHistorialDTOs.add(historialDTO);
+            }
+        }
+        return encomiendaHistorialDTOs;
     }
 
+    @Transactional
     public Encomienda actualizarEstado(Long id, String nuevoEstado) {
         Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new RuntimeException("Encomienda no encontrada"));
         encomienda.setEstado(nuevoEstado);

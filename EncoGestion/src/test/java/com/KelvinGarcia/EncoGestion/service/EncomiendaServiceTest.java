@@ -16,10 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -185,4 +183,80 @@ public class EncomiendaServiceTest {
 
     assertThrows(ResourceNotFoundException.class, () -> encomiendaService.crearEncomienda(encomiendaRequestDTO, id));
     }
+
+    @Test
+    public void testBuscarEncomiendasDeClientePorFecha(){
+
+        String id = "12345";
+        Cliente cliente = new Cliente();
+        cliente.setId(id);
+
+        when(clienteRepository.findById(id)).thenReturn(Optional.of(cliente));
+
+        LocalDate fecha = LocalDate.of(2024, 06, 01);
+        Encomienda encomienda1 = new Encomienda();
+        Encomienda encomienda2 = new Encomienda();
+        List<Encomienda> encomiendas = Arrays.asList(encomienda1, encomienda2);
+
+        when(encomiendaRepository.getEncomiendaByDateAndClienteID(fecha, cliente)).thenReturn(encomiendas);
+
+        PaqueteResponseDTO paquete1 = new PaqueteResponseDTO();
+        PaqueteResponseDTO paquete2 = new PaqueteResponseDTO();
+        List<PaqueteResponseDTO> paquetes = Arrays.asList(paquete1, paquete2);
+
+        when(paqueteService.devolverPaquetes(encomienda1)).thenReturn(paquetes);
+        when(paqueteService.devolverPaquetes(encomienda2)).thenReturn(paquetes);
+
+        SobreResponseDTO sobre1 = new SobreResponseDTO();
+        SobreResponseDTO sobre2 = new SobreResponseDTO();
+        List<SobreResponseDTO> sobres = Arrays.asList(sobre1, sobre2);
+
+        when(sobreService.devolverSobres(encomienda1)).thenReturn(sobres);
+        when(sobreService.devolverSobres(encomienda2)).thenReturn(sobres);
+
+        EncomiendaHistorialDTO encomiendaHistorialDTO1 = new EncomiendaHistorialDTO();
+        EncomiendaHistorialDTO encomiendaHistorialDTO2 = new EncomiendaHistorialDTO();
+
+        when(encomiendaMapper.convertToHistorialDTO(encomienda1, paquetes, sobres)).thenReturn(encomiendaHistorialDTO1);
+        when(encomiendaMapper.convertToHistorialDTO(encomienda2, paquetes, sobres)).thenReturn(encomiendaHistorialDTO2);
+
+        List<EncomiendaHistorialDTO> resultado = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, id);
+
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        assertEquals(encomiendaHistorialDTO1, resultado.get(0));
+        assertEquals(encomiendaHistorialDTO2, resultado.get(1));
+
+    }
+
+    @Test
+    public void testBuscarEncomiendaDeClientePorFechaClienteNoExiste(){
+
+        String id = "12345";
+
+        when(clienteRepository.findById(id)).thenReturn(Optional.empty());
+
+        LocalDate fecha = LocalDate.of(2024, 06, 01);
+
+        assertThrows(ResourceNotFoundException.class, ()-> encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, id));
+
+    }
+
+    @Test
+    public void testBuscarEncomiendaDeClientePorFechaNoExisteEncomienda() {
+
+        String id = "12345";
+        Cliente cliente = new Cliente();
+        cliente.setId(id);
+
+        when(clienteRepository.findById(id)).thenReturn(Optional.of(cliente));
+
+        LocalDate fecha = LocalDate.of(2024, 06, 01);
+
+        when(encomiendaRepository.getEncomiendaByDateAndClienteID(fecha, cliente)).thenReturn(Collections.emptyList());
+
+        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, id));
+
+    }
+
 }
