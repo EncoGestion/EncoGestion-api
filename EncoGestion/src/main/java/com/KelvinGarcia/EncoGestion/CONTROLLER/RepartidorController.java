@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.CONTROLLER;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorRequestDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorSesionDTO;
 import com.KelvinGarcia.EncoGestion.SERVICE.RepartidorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,4 +29,11 @@ public class RepartidorController {
         RepartidorResponseDTO crearRepartidor = repartidorService.crearRepartidor(repartidorRequestDTO);
         return new ResponseEntity<>(crearRepartidor, HttpStatus.CREATED);
     }
+
+    @PostMapping("/inicio")
+    public ResponseEntity<Boolean> iniciarSesion(@Validated @RequestBody RepartidorSesionDTO repartidorSesionDTO){
+        boolean iniciarRepartidor = repartidorService.inicioSesionRepartidor(repartidorSesionDTO);
+        return new ResponseEntity<>(iniciarRepartidor, HttpStatus.OK);
+    }
+
 }

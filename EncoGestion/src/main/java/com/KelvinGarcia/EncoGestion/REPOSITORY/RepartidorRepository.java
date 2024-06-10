@@ -11,4 +11,7 @@ public interface RepartidorRepository extends JpaRepository<Repartidor, String> 
 
     Optional<Repartidor> findById(String id);
 
+    @Query("SELECT r FROM Repartidor r WHERE r.nombre=:nombreRepartidor")
+    Repartidor inicioSesionRepartidor(@Param("nombreRepartidor") String nombreRepartidor);
+  
 }

@@ -10,4 +10,5 @@ public class RepartidorResponseDTO {
 
     private String id;
     private String nombre;
+
 }
