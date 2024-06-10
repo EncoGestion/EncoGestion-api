@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.MODEL.ENTITY;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,11 +37,13 @@ public class Encomienda {
     private String contraseña;
     @Column(name="direccion")
     private String direccion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(name="fecha")
     private LocalDate fecha;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @Column(name="hora")
     private LocalTime hora;
-    @Column(name="estado", columnDefinition = "VARCHAR(255) DEFAULT 'En espera'" )
+    @Column(name="estado", columnDefinition = "VARCHAR(255) DEFAULT 'En espera'")
     private String estado;
     @Column(name="id_cliente_destinatario", nullable=false)
     private String clienteDestinatario;
