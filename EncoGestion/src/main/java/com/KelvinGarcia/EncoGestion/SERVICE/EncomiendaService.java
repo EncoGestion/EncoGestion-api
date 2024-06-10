@@ -119,10 +119,11 @@ public class EncomiendaService {
     }
 
     @Transactional
-    public List<EncomiendaResponseDTO> asignarEncomienda(String proOrigen, String estado, String id_empleado) {
+    public List<EncomiendaHistorialDTO> asignarEncomienda(String proOrigen, String estado, String id_repartidor) {
+        Repartidor repartidor = repartidorRepository.findById(id_repartidor)
+                .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_repartidor));
         List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado);
-        Repartidor repartidor = repartidorRepository.findById(id_empleado)
-                .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_empleado));
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
 
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("No se encontraron encomiendas para la provincia "+proOrigen);
@@ -131,11 +132,15 @@ public class EncomiendaService {
             if(!repartidor.getNombre().isEmpty()){
                 for (Encomienda encomienda : encomiendas) {
                     encomiendaRepository.updateRepartidor(encomienda.getId(), repartidor);
+                    List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                    List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                    Encomienda encomiendaActualizada = encomiendaRepository.findBySourceOrEncomiendaID(encomienda.getId());
+                    EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomiendaActualizada, paquetes, sobres);
+                    encomiendaHistorialDTOs.add(historialDTO);
                 }
             }
-
         }
-        return encomiendaMapper.convertToListDTO(encomiendas);
+        return encomiendaHistorialDTOs;
     }
 
     @Transactional
