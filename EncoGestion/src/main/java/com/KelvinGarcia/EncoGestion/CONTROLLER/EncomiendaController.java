@@ -20,8 +20,8 @@ public class EncomiendaController {
     private final EncomiendaService encomiendaService;
 
     @GetMapping
-    public ResponseEntity<List<EncomiendaResponseDTO>> getAllEncomiendas() {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.getAllEncomiendas();
+    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendas() {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getAllEncomiendas();
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
@@ -38,8 +38,8 @@ public class EncomiendaController {
     }
 
     @GetMapping("/clientes/fecha/{clienteID}")
-    public ResponseEntity<List<EncomiendaResponseDTO>> bucarEncomiendasPorCliente(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> bucarEncomiendasDeClientePorFecha(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
