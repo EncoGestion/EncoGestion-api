@@ -26,4 +26,6 @@ public class ClienteMapper {
     public List<ClienteResponseDTO> convertToListDTO(List<Cliente> clientes){
         return clientes.stream().map(this::convertToDTO).toList();
     }
+
 }
+

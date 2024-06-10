@@ -10,9 +10,5 @@ public class RepartidorResponseDTO {
 
     private String id;
     private String nombre;
-    private String contrasenia;
-    private String telefono;
-    private String correo;
-    private String estado;
-    private String ubiProvincia;
+
 }

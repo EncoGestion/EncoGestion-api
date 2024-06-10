@@ -29,4 +29,5 @@ public class RepartidorMapper {
     public Repartidor convertInicio(RepartidorSesionDTO repartidorSesionDTO){
         return modelMapper.map(repartidorSesionDTO, Repartidor.class);
     }
+  
 }

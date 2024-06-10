@@ -27,7 +27,7 @@ public class RepartidorService {
     }
 
     @Transactional(readOnly = true)
-    public RepartidorResponseDTO getRepartidorByID(Long id){
+    public RepartidorResponseDTO getRepartidorByID(String id){
         Repartidor repartidor = repartidorRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el numero: "+id));
         return repartidorMapper.convertToDTO(repartidor);
     }
@@ -38,6 +38,7 @@ public class RepartidorService {
         repartidorRepository.save(repartidor);
         return repartidorMapper.convertToDTO(repartidor);
     }
+
     @Transactional
     public boolean inicioSesionRepartidor(RepartidorSesionDTO repartidorSesionDTO){
         boolean sesion = false;
@@ -56,4 +57,5 @@ public class RepartidorService {
 
         return sesion;
     }
+
 }
