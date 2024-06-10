@@ -5,8 +5,10 @@ import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Repartidor;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
+import com.KelvinGarcia.EncoGestion.REPOSITORY.RepartidorRepository;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import com.KelvinGarcia.EncoGestion.SERVICE.PaqueteService;
 import com.KelvinGarcia.EncoGestion.SERVICE.SobreService;
@@ -29,6 +31,8 @@ public class EncomiendaServiceTest {
     private EncomiendaRepository encomiendaRepository;
     @Mock
     private ClienteRepository clienteRepository;
+    @Mock
+    private RepartidorRepository repartidorRepository;
     @Mock
     private EncomiendaMapper encomiendaMapper;
     @InjectMocks
@@ -257,6 +261,90 @@ public class EncomiendaServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, id));
 
+    }
+
+    @Test
+    public void testAsignarEncomienda(){
+
+        String id_repartidor = "12345";
+        String nombre = "Samuel";
+        Repartidor repartidor = new Repartidor();
+        repartidor.setId(id_repartidor);
+        repartidor.setNombre(nombre);
+
+        when(repartidorRepository.findById(id_repartidor)).thenReturn(Optional.of(repartidor));
+
+        String estado = "Por enviar";
+        String proOrigen = "Trujillo";
+        Encomienda encomienda1 = new Encomienda();
+        encomienda1.setId(1L);
+        Encomienda encomienda2 = new Encomienda();
+        encomienda2.setId(2L);
+        List<Encomienda> encomiendas = Arrays.asList(encomienda1, encomienda2);
+
+        when(encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado)).thenReturn(encomiendas);
+
+        PaqueteResponseDTO paquete1 = new PaqueteResponseDTO();
+        PaqueteResponseDTO paquete2 = new PaqueteResponseDTO();
+        List<PaqueteResponseDTO> paquetes = Arrays.asList(paquete1, paquete2);
+
+        when(paqueteService.devolverPaquetes(encomienda1)).thenReturn(paquetes);
+        when(paqueteService.devolverPaquetes(encomienda2)).thenReturn(paquetes);
+
+        SobreResponseDTO sobre1 = new SobreResponseDTO();
+        SobreResponseDTO sobre2 = new SobreResponseDTO();
+        List<SobreResponseDTO> sobres = Arrays.asList(sobre1, sobre2);
+
+        when(sobreService.devolverSobres(encomienda1)).thenReturn(sobres);
+        when(sobreService.devolverSobres(encomienda2)).thenReturn(sobres);
+
+        when(encomiendaRepository.findBySourceOrEncomiendaID(1L)).thenReturn(encomienda1);
+        when(encomiendaRepository.findBySourceOrEncomiendaID(2L)).thenReturn(encomienda2);
+
+        EncomiendaHistorialDTO encomiendaDTO1 = new EncomiendaHistorialDTO();
+        EncomiendaHistorialDTO encomiendaDTO2 = new EncomiendaHistorialDTO();
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOS = Arrays.asList(encomiendaDTO1, encomiendaDTO2);
+
+        when(encomiendaMapper.convertToHistorialDTO(encomienda1, paquetes, sobres)).thenReturn(encomiendaDTO1);
+        when(encomiendaMapper.convertToHistorialDTO(encomienda2, paquetes, sobres)).thenReturn(encomiendaDTO2);
+
+        List<EncomiendaHistorialDTO> result = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(encomiendaDTO1, result.get(0));
+        assertEquals(encomiendaDTO2, result.get(1));
+
+    }
+
+    @Test
+    public void testAsignarEncomiendaNoExisteRepartidor(){
+
+        String id_repartidor= "12345";
+
+        when(repartidorRepository.findById(id_repartidor)).thenReturn(Optional.empty());
+
+        String estado = "Por enviar";
+        String proOrigen = "Trujillo";
+
+        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor));
+    }
+
+    @Test
+    public void testAsignarEncomiendaNoExisteEncomienda() {
+
+        String id_repartidor = "12345";
+        Repartidor repartidor = new Repartidor();
+        repartidor.setId(id_repartidor);
+
+        when(repartidorRepository.findById(id_repartidor)).thenReturn(Optional.of(repartidor));
+
+        String estado = "Por enviar";
+        String proOrigen = "Trujillo";
+
+        when(encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado)).thenReturn(Collections.emptyList());
+
+        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor));
     }
 
 }
