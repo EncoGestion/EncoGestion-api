@@ -29,9 +29,9 @@ public class RepartidorController {
         RepartidorResponseDTO crearRepartidor = repartidorService.crearRepartidor(repartidorRequestDTO);
         return new ResponseEntity<>(crearRepartidor, HttpStatus.CREATED);
     }
-    @PostMapping("/inicio")
-    public ResponseEntity<Boolean> iniciarSesion(@Validated @RequestBody RepartidorSesionDTO repartidorSesionDTO){
-        boolean iniciarRepartidor = repartidorService.inicioSesionRepartidor(repartidorSesionDTO);
-        return new ResponseEntity<>(iniciarRepartidor, HttpStatus.OK);
+    @GetMapping("/login")
+    public ResponseEntity<Boolean> login(@Validated @RequestBody RepartidorSesionDTO repartidorSesionDTO){
+        Boolean sesion = repartidorService.inicioSesionRepartidor(repartidorSesionDTO);
+        return new ResponseEntity<>(sesion, HttpStatus.OK);
     }
 }

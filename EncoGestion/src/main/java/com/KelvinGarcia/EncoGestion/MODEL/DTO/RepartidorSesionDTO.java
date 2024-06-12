@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
 
 @Data
 @AllArgsConstructor
@@ -11,8 +12,9 @@ import lombok.NoArgsConstructor;
 public class RepartidorSesionDTO {
 
 
-    @NotBlank(message = "El nombre no puede estar vacio")
-    private String nombre;
+    @NotBlank(message = "El correo no puede estar vacio")
+    @Email
+    private String correo;
     @NotBlank(message = "La contraseña no puede estar vacia")
-    private String contrasenia;
+    private String contraseña;
 }

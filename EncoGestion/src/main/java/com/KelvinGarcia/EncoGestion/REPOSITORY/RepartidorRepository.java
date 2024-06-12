@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
+
 public interface RepartidorRepository extends JpaRepository<Repartidor, Long> {
 
-    @Query("SELECT r FROM Repartidor r WHERE r.id=:repartidorID")
-    List<Repartidor> buscarRepartidorPorID(@Param("repartidorID") Long repartidorID);
-    @Query("SELECT r FROM Repartidor r WHERE r.nombre=:nombreRepartidor")
-    Repartidor inicioSesionRepartidor(@Param("nombreRepartidor") String nombreRepartidor);
+    Optional<Repartidor> findById(String id);
+
+    @Query("SELECT r FROM Repartidor r WHERE r.correo=:correoRepartidor")
+    Repartidor inicioSesionRepartidor(@Param("correoRepartidor") String correoRepartidor);
 }

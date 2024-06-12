@@ -38,22 +38,14 @@ public class RepartidorService {
         repartidorRepository.save(repartidor);
         return repartidorMapper.convertToDTO(repartidor);
     }
-    @Transactional
-    public boolean inicioSesionRepartidor(RepartidorSesionDTO repartidorSesionDTO){
-        boolean sesion = false;
-        try {
-            Repartidor repartidor = repartidorRepository.inicioSesionRepartidor(repartidorSesionDTO.getNombre());
+    @Transactional(readOnly = true)
+    public boolean inicioSesionRepartidor(RepartidorSesionDTO repartidorSesionDTO) {
+        Repartidor repartidor = repartidorRepository.inicioSesionRepartidor(repartidorSesionDTO.getCorreo());
 
-            if (repartidor.getNombre().equals(repartidorSesionDTO.getNombre()) && repartidor.getContrasenia().equals(repartidorSesionDTO.getContrasenia())) {
-                sesion = true;
-            }
-            else{
-                throw new NullPointerException("El nombre o la contraseña son incorrectas");
-            }
-        } catch (NullPointerException e) {
-            throw new NullPointerException("El nombre o la contraseña son incorrectas");
+        if (repartidor != null && repartidor.getContrasenia().equals(repartidorSesionDTO.getContraseña())) {
+            return true;
+        } else {
+            throw new ResourceNotFoundException("El correo o la contraseña son incorrectos");
         }
-
-        return sesion;
     }
 }
