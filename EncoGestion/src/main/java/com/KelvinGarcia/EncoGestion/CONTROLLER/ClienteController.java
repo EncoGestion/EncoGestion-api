@@ -2,6 +2,7 @@ package com.KelvinGarcia.EncoGestion.CONTROLLER;
 
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.ClienteRequestDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.ClienteResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
 import com.KelvinGarcia.EncoGestion.SERVICE.ClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,12 @@ public class ClienteController {
                                                               @RequestBody ClienteRequestDTO clienteDTO){
         ClienteResponseDTO datosActualizados = clienteService.actualizarDatos(id, clienteDTO);
         return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<Cliente> cambiarContraseña(@PathVariable String id, @RequestParam String contraseña){
+        Cliente cliente = clienteService.cambiarContraseña(id, contraseña);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
 }

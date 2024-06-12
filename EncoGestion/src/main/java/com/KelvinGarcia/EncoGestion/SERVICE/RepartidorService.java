@@ -26,7 +26,7 @@ public class RepartidorService {
     }
 
     @Transactional(readOnly = true)
-    public RepartidorResponseDTO getRepartidorByID(Long id){
+    public RepartidorResponseDTO getRepartidorByID(String id){
         Repartidor repartidor = repartidorRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el numero: "+id));
         return repartidorMapper.convertToDTO(repartidor);
     }
