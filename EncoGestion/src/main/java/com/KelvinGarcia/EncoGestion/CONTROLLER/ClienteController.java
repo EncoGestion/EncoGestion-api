@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.ClienteSesionDTO;
 
 @RestController
 @RequestMapping("/clientes")
@@ -34,6 +37,16 @@ public class ClienteController {
     public ResponseEntity<Cliente> cambiarContraseña(@PathVariable String id, @RequestParam String contraseña){
         Cliente cliente = clienteService.cambiarContraseña(id, contraseña);
         return new ResponseEntity<>(cliente, HttpStatus.OK);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody ClienteSesionDTO clienteSesionDTO) {
+        try {
+            boolean sesion = clienteService.iniciarSesionCliente(clienteSesionDTO);
+            return ResponseEntity.ok("Inicio de sesión exitoso");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+
     }
 
 }
