@@ -1,5 +1,6 @@
 package com.KelvinGarcia.EncoGestion.SERVICE;
 
+import com.KelvinGarcia.EncoGestion.EXCEPTION.EstadoYaAsignadoException;
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.EncomiendaMapper;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
@@ -26,27 +27,6 @@ public class EncomiendaService {
     private final EncomiendaMapper encomiendaMapper;
     private final PaqueteService paqueteService;
     private final SobreService sobreService;
-
-    @Transactional(readOnly = true)
-    public List<EncomiendaHistorialDTO> getAllEncomiendas() {
-        List<Encomienda> encomiendas = encomiendaRepository.findAll();
-
-        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
-
-        if(encomiendas.isEmpty()) {
-           throw new ResourceNotFoundException("No hay encomiendas");
-        }
-        else{
-            for(Encomienda encomienda : encomiendas) {
-                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
-                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
-                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
-                encomiendaHistorialDTOs.add(historialDTO);
-            }
-        }
-
-        return encomiendaHistorialDTOs;
-    }
 
     @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
@@ -134,19 +114,40 @@ public class EncomiendaService {
     }
 
     @Transactional
-    public Encomienda actualizarEstado(Long id, String nuevoEstado) {
-        Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new RuntimeException("Encomienda no encontrada"));
-        encomienda.setEstado(nuevoEstado);
-        encomienda.setFecha(LocalDate.now());
-        encomienda.setHora(LocalTime.now());
-        return encomiendaRepository.save(encomienda);
+    public EncomiendaGmailDTO actualizarEstado(Long id, String nuevoEstado) {
+        Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Encomienda no encontrada"));
+        String contenidoCorreo, correo;
+
+        if(nuevoEstado.equals(encomienda.getEstado())){
+            throw new EstadoYaAsignadoException("Este estado ya ha sido asignado");
+        }
+        else{
+            if(nuevoEstado.equals("En camino")){
+                encomienda.setEstado(nuevoEstado);
+            }
+            if(nuevoEstado.equals("En destino")||nuevoEstado.equals("Entregado")){
+                encomienda.setEstado(nuevoEstado);
+                encomienda.setFecha(LocalDate.now());
+                encomienda.setHora(LocalTime.now());
+            }
+            encomiendaRepository.save(encomienda);
+            contenidoCorreo = "Su encomienda con numero de tracking: "+encomienda.getId()
+                    +" con origen: "+encomienda.getDepOrigen()+", "+encomienda.getProOrigen()+", "+encomienda.getDisOrigen()
+                    +" y destino: "+encomienda.getDepDestino()+", "+encomienda.getProDestino()+", "+encomienda.getDisDestino()
+                    +" estÃ¡ "+encomienda.getEstado();
+
+            correo = encomienda.getClienteRemitente().getCorreo();
+
+        }
+        return encomiendaMapper.convertToGmailDTO(contenidoCorreo, correo);
     }
 
     @Transactional
-    public List<EncomiendaResponseDTO> asignarEncomienda(String proOrigen, String estado, String id_empleado) {
+    public List<EncomiendaHistorialDTO> asignarEncomienda(String proOrigen, String estado, String id_repartidor) {
+        Repartidor repartidor = repartidorRepository.findById(id_repartidor)
+                .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_repartidor));
         List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado);
-        Repartidor repartidor = repartidorRepository.findById(id_empleado)
-                .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_empleado));
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
 
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("No se encontraron encomiendas para la provincia "+proOrigen);
@@ -155,11 +156,15 @@ public class EncomiendaService {
             if(!repartidor.getNombre().isEmpty()){
                 for (Encomienda encomienda : encomiendas) {
                     encomiendaRepository.updateRepartidor(encomienda.getId(), repartidor);
+                    List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                    List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                    Encomienda encomiendaActualizada = encomiendaRepository.findBySourceOrEncomiendaID(encomienda.getId());
+                    EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomiendaActualizada, paquetes, sobres);
+                    encomiendaHistorialDTOs.add(historialDTO);
                 }
             }
-
         }
-        return encomiendaMapper.convertToListDTO(encomiendas);
+        return encomiendaHistorialDTOs;
     }
 
     @Transactional
