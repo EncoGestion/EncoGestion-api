@@ -109,6 +109,30 @@ public class EncomiendaService {
         return encomiendaHistorialDTOs;
     }
 
+    @Transactional(readOnly = true)
+    public List<EncomiendaHistorialDTO> buscarEncomiendaDeRepartidorPorFecha(LocalDate fecha, String repartidorID) {
+
+        Repartidor repartidor = repartidorRepository.findById(repartidorID)
+                .orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el id: "+repartidorID));
+
+        List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaByDateAndRepartidorID(fecha,repartidor);
+
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+
+        if (encomiendas.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron encomiendas para el repartidor con DNI " + repartidorID + " en la fecha " + fecha);
+        }
+        else{
+            for (Encomienda encomienda : encomiendas) {
+                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+                encomiendaHistorialDTOs.add(historialDTO);
+            }
+        }
+        return encomiendaHistorialDTOs;
+    }
+
     @Transactional
     public Encomienda actualizarEstado(Long id, String nuevoEstado) {
         Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new RuntimeException("Encomienda no encontrada"));
