@@ -25,6 +25,9 @@ public interface EncomiendaRepository extends JpaRepository<Encomienda, Long> {
     @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.clienteRemitente=:cliente ")
     List<Encomienda> getEncomiendaByDateAndClienteID(@Param("fecha") LocalDate fecha, @Param("cliente") Cliente cliente);
 
+    @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.repartidor=:repartidor ")
+    List<Encomienda> getEncomiendaByDateAndRepartidorID(@Param("fecha") LocalDate fecha, @Param("repartidor") Repartidor repartidor);
+
     @Query("SELECT e FROM Encomienda e WHERE e.proOrigen = :proOrigen AND e.estado = :estado AND e.proDestino = " +
             "(SELECT sub.proDestino FROM Encomienda sub WHERE sub.proOrigen = :proOrigen AND sub.estado = :estado " +
             "GROUP BY sub.proDestino HAVING COUNT(sub.proDestino) = " +
