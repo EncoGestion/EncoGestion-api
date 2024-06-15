@@ -19,12 +19,6 @@ public class EncomiendaController {
 
     private final EncomiendaService encomiendaService;
 
-    @GetMapping
-    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendas() {
-        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getAllEncomiendas();
-        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
-    }
-
     @GetMapping("/clientes/{id}")
     public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByCliente(@PathVariable String id) {
         List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByClienteId(id);
@@ -43,9 +37,15 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
+    @GetMapping("/repartidores/fecha/{repartidorID}")
+    public ResponseEntity<List<EncomiendaHistorialDTO>> bucarEncomiendasDeRepartidorPorFecha(@PathVariable String repartidorID, @RequestParam("fecha") LocalDate fecha) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.buscarEncomiendaDeRepartidorPorFecha(fecha, repartidorID);
+        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
+    }
+
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Encomienda> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
-        Encomienda encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
+    public ResponseEntity<EncomiendaGmailDTO> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
+        EncomiendaGmailDTO encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
         return ResponseEntity.ok(encomiendaActualizada);
     }
 

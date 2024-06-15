@@ -47,4 +47,12 @@ public class EncomiendaMapper {
             return historialDTO;
     }
 
+    public EncomiendaGmailDTO convertToGmailDTO(String contenidoGmail, String correo){
+        EncomiendaGmailDTO encomiendaGmailDTO = new EncomiendaGmailDTO();
+
+        encomiendaGmailDTO.setContenidoCorreo(contenidoGmail);
+        encomiendaGmailDTO.setCorreo(correo);
+
+        return encomiendaGmailDTO;
+    }
 }
