@@ -9,4 +9,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, String> {
 
     @Query("SELECT c FROM Cliente c WHERE c.id=:clienteID")
     Cliente buscarPorId (@Param("clienteID") String clienteID);
+
+    @Query("SELECT c FROM Cliente c WHERE c.correo=:correoCliente")
+    Cliente iniciarSesionCliente(@Param("correoCliente") String correoCliente);
 }
+
