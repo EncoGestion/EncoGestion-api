@@ -20,12 +20,6 @@ public class RepartidorService {
     private final RepartidorMapper repartidorMapper;
 
     @Transactional(readOnly = true)
-    public List<RepartidorResponseDTO> getAllRepartidores(){
-        List<Repartidor> repartidores = repartidorRepository.findAll();
-        return repartidorMapper.convertToListDTO(repartidores);
-    }
-
-    @Transactional(readOnly = true)
     public RepartidorResponseDTO getRepartidorByID(String id){
         Repartidor repartidor = repartidorRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el numero: "+id));
         return repartidorMapper.convertToDTO(repartidor);

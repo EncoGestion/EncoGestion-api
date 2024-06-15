@@ -19,12 +19,6 @@ public class EncomiendaController {
 
     private final EncomiendaService encomiendaService;
 
-    @GetMapping
-    public ResponseEntity<List<EncomiendaResponseDTO>> getAllEncomiendas() {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.getAllEncomiendas();
-        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
-    }
-
     @GetMapping("/clientes/{id}")
     public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByCliente(@PathVariable String id) {
         List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByClienteId(id);

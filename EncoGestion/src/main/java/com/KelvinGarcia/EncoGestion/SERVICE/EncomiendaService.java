@@ -28,12 +28,6 @@ public class EncomiendaService {
     private final SobreService sobreService;
 
     @Transactional(readOnly = true)
-    public List<EncomiendaResponseDTO> getAllEncomiendas() {
-        List<Encomienda> encomiendas = encomiendaRepository.findAll();
-        return encomiendaMapper.convertToListDTO(encomiendas);
-    }
-
-    @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromCliente(id);
         if(encomiendas.isEmpty()){

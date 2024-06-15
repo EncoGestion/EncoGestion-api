@@ -31,7 +31,7 @@ public class ClienteController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Cliente> cambiarContraseña(@PathVariable String id, @RequestParam String contraseña){
+    public ResponseEntity<Cliente> cambiarContraseña(@PathVariable String id, @RequestBody String contraseña){
         Cliente cliente = clienteService.cambiarContraseña(id, contraseña);
         return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
