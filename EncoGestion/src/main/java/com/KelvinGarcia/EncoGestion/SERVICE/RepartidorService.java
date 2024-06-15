@@ -4,6 +4,7 @@ import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.MAPPER.RepartidorMapper;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorRequestDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorResponseDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorSesionDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Repartidor;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.RepartidorRepository;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,15 @@ public class RepartidorService {
         repartidorRepository.save(repartidor);
         return repartidorMapper.convertToDTO(repartidor);
     }
+    @Transactional(readOnly = true)
+    public boolean inicioSesionRepartidor(RepartidorSesionDTO repartidorSesionDTO) {
+        Repartidor repartidor = repartidorRepository.inicioSesionRepartidor(repartidorSesionDTO.getCorreo());
+
+        if (repartidor != null && repartidor.getContrasenia().equals(repartidorSesionDTO.getContraseña())) {
+            return true;
+        } else {
+            throw new ResourceNotFoundException("El correo o la contraseña son incorrectos");
+        }
+    }
+
 }

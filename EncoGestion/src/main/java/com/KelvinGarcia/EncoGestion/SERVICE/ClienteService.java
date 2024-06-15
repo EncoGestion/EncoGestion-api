@@ -10,6 +10,8 @@ import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.ClienteSesionDTO;
+import com.KelvinGarcia.EncoGestion.EXCEPTION.BadRequestException;
 
 @Service
 @AllArgsConstructor
@@ -51,5 +53,20 @@ public class ClienteService {
         }
 
         return clienteRepository.save(cliente);
+    }
+    @Transactional
+    public boolean iniciarSesionCliente(ClienteSesionDTO clienteSesionDTO){
+        boolean sesion = true;
+        Cliente cliente = clienteRepository.iniciarSesionCliente(clienteSesionDTO.getCorreo());
+
+        if (!cliente.getContrasenia().equals(clienteSesionDTO.getContrasenia())) {
+            throw new ResourceNotFoundException("El correo o la contraseña son incorrectas");
+        }
+
+        if(cliente.getCorreo().isEmpty()){
+            throw new BadRequestException("El correo no puede ser vacío");
+        }
+
+        return sesion;
     }
 }

@@ -32,20 +32,20 @@ public class EncomiendaController {
     }
 
     @GetMapping("/clientes/fecha/{clienteID}")
-    public ResponseEntity<List<EncomiendaResponseDTO>> bucarEncomiendasPorCliente(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> bucarEncomiendasDeClientePorFecha(@PathVariable String clienteID, @RequestParam("fecha") LocalDate fecha) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.buscarEncomiendaDeClientePorFecha(fecha, clienteID);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Encomienda> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
-        Encomienda encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
+    public ResponseEntity<EncomiendaGmailDTO> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
+        EncomiendaGmailDTO encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
         return ResponseEntity.ok(encomiendaActualizada);
     }
 
     @GetMapping("/repartidores/asignacion/{proOrigen}")
-    public ResponseEntity<List<EncomiendaResponseDTO>> asignarEncomiendasPorProOrigen(@PathVariable String proOrigen, @RequestParam("estado") String estado, @RequestParam("id_repartidor") String id_repartidor) {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> asignarEncomiendasPorProOrigen(@PathVariable String proOrigen, @RequestParam("estado") String estado, @RequestParam("id_repartidor") String id_repartidor) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
