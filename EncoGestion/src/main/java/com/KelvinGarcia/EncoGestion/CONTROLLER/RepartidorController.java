@@ -2,6 +2,7 @@ package com.KelvinGarcia.EncoGestion.CONTROLLER;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorRequestDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorResponseDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorSesionDTO;
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Repartidor;
 import com.KelvinGarcia.EncoGestion.SERVICE.RepartidorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class RepartidorController {
     public ResponseEntity<Boolean> login(@Validated @RequestBody RepartidorSesionDTO repartidorSesionDTO) {
         Boolean sesion = repartidorService.inicioSesionRepartidor(repartidorSesionDTO);
         return new ResponseEntity<>(sesion, HttpStatus.OK);
-    }    
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<Repartidor> cambiarContraseña(@PathVariable String id, @RequestBody String contraseña){
+        Repartidor repartidor = repartidorService.cambiarContraseña(id, contraseña);
+        return new ResponseEntity<>(repartidor, HttpStatus.OK);
+    }
 
 }

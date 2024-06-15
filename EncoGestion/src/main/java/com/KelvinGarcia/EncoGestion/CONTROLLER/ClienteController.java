@@ -38,7 +38,8 @@ public class ClienteController {
         Cliente cliente = clienteService.cambiarContraseña(id, contraseña);
         return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
-    @PostMapping("/login")
+
+    @GetMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody ClienteSesionDTO clienteSesionDTO) {
         try {
             boolean sesion = clienteService.iniciarSesionCliente(clienteSesionDTO);

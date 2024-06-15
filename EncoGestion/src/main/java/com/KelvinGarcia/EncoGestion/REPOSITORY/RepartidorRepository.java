@@ -8,9 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RepartidorRepository extends JpaRepository<Repartidor, Long> {
-
-    Optional<Repartidor> findById(String id);
+public interface RepartidorRepository extends JpaRepository<Repartidor, String> {
 
     @Query("SELECT r FROM Repartidor r WHERE r.correo=:correoRepartidor")
     Repartidor inicioSesionRepartidor(@Param("correoRepartidor") String correoRepartidor);
