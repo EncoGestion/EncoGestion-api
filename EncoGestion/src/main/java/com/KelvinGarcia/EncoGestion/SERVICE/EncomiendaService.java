@@ -8,6 +8,8 @@ import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.*;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.RepartidorRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,9 @@ public class EncomiendaService {
     private final EncomiendaMapper encomiendaMapper;
     private final PaqueteService paqueteService;
     private final SobreService sobreService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
@@ -147,6 +152,7 @@ public class EncomiendaService {
         Repartidor repartidor = repartidorRepository.findById(id_repartidor)
                 .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_repartidor));
         List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado);
+
         List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
 
         if(encomiendas.isEmpty()){
@@ -156,6 +162,7 @@ public class EncomiendaService {
             if(!repartidor.getNombre().isEmpty()){
                 for (Encomienda encomienda : encomiendas) {
                     encomiendaRepository.updateRepartidor(encomienda.getId(), repartidor);
+                    entityManager.refresh(encomienda);
                     List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
                     List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
                     Encomienda encomiendaActualizada = encomiendaRepository.findBySourceOrEncomiendaID(encomienda.getId());
