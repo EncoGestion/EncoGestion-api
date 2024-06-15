@@ -8,6 +8,8 @@ import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.*;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
 import com.KelvinGarcia.EncoGestion.REPOSITORY.RepartidorRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,26 +30,8 @@ public class EncomiendaService {
     private final PaqueteService paqueteService;
     private final SobreService sobreService;
 
-    @Transactional(readOnly = true)
-    public List<EncomiendaHistorialDTO> getAllEncomiendas() {
-        List<Encomienda> encomiendas = encomiendaRepository.findAll();
-
-        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
-
-        if(encomiendas.isEmpty()) {
-           throw new ResourceNotFoundException("No hay encomiendas");
-        }
-        else{
-            for(Encomienda encomienda : encomiendas) {
-                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
-                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
-                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
-                encomiendaHistorialDTOs.add(historialDTO);
-            }
-        }
-
-        return encomiendaHistorialDTOs;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
@@ -110,6 +94,30 @@ public class EncomiendaService {
         return encomiendaHistorialDTOs;
     }
 
+    @Transactional(readOnly = true)
+    public List<EncomiendaHistorialDTO> buscarEncomiendaDeRepartidorPorFecha(LocalDate fecha, String repartidorID) {
+
+        Repartidor repartidor = repartidorRepository.findById(repartidorID)
+                .orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el id: "+repartidorID));
+
+        List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaByDateAndRepartidorID(fecha,repartidor);
+
+        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
+
+        if (encomiendas.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron encomiendas para el repartidor con DNI " + repartidorID + " en la fecha " + fecha);
+        }
+        else{
+            for (Encomienda encomienda : encomiendas) {
+                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
+                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
+                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
+                encomiendaHistorialDTOs.add(historialDTO);
+            }
+        }
+        return encomiendaHistorialDTOs;
+    }
+
     @Transactional
     public EncomiendaGmailDTO actualizarEstado(Long id, String nuevoEstado) {
         Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Encomienda no encontrada"));
@@ -144,6 +152,7 @@ public class EncomiendaService {
         Repartidor repartidor = repartidorRepository.findById(id_repartidor)
                 .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_repartidor));
         List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado);
+
         List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
 
         if(encomiendas.isEmpty()){
@@ -153,6 +162,7 @@ public class EncomiendaService {
             if(!repartidor.getNombre().isEmpty()){
                 for (Encomienda encomienda : encomiendas) {
                     encomiendaRepository.updateRepartidor(encomienda.getId(), repartidor);
+                    entityManager.refresh(encomienda);
                     List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
                     List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
                     Encomienda encomiendaActualizada = encomiendaRepository.findBySourceOrEncomiendaID(encomienda.getId());
