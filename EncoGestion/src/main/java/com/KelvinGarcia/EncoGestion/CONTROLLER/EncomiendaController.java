@@ -60,5 +60,11 @@ public class EncomiendaController {
         EncomiendaResponseDTO encomienda = encomiendaService.crearEncomienda(encomiendaRequestDTO, clienteRemitente);
         return new ResponseEntity<>(encomienda, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}/consultar")
+    public ResponseEntity<String> consultarEstadoEncomienda(@PathVariable Long id) {
+        String estado = encomiendaService.obtenerEstadoEncomienda(id);
+        return ResponseEntity.ok(estado);
+    }
 }
 
