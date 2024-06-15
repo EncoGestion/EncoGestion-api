@@ -29,27 +29,6 @@ public class EncomiendaService {
     private final SobreService sobreService;
 
     @Transactional(readOnly = true)
-    public List<EncomiendaHistorialDTO> getAllEncomiendas() {
-        List<Encomienda> encomiendas = encomiendaRepository.findAll();
-
-        List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
-
-        if(encomiendas.isEmpty()) {
-           throw new ResourceNotFoundException("No hay encomiendas");
-        }
-        else{
-            for(Encomienda encomienda : encomiendas) {
-                List<PaqueteResponseDTO> paquetes = paqueteService.devolverPaquetes(encomienda);
-                List<SobreResponseDTO> sobres = sobreService.devolverSobres(encomienda);
-                EncomiendaHistorialDTO historialDTO = encomiendaMapper.convertToHistorialDTO(encomienda, paquetes, sobres);
-                encomiendaHistorialDTOs.add(historialDTO);
-            }
-        }
-
-        return encomiendaHistorialDTOs;
-    }
-
-    @Transactional(readOnly = true)
     public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
         List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromCliente(id);
         List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
