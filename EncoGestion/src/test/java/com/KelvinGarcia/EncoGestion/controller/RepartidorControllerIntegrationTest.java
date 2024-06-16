@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.RepartidorRequestDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RepartidorControllerIntegrationTest {
+public class    RepartidorControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,6 +41,18 @@ public class RepartidorControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/repartidores/{id}", "95624875")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contraseña))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testLogin() throws Exception {
+        SesionDTO sesionDTO = new SesionDTO();
+        sesionDTO.setCorreo("repartidor@gmail.com");
+        sesionDTO.setContraseña("REPARTIDOR");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/repartidores/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(sesionDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
