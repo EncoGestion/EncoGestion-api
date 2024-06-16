@@ -200,7 +200,7 @@ public class EncomiendaService {
         return encomiendaMapper.convertToDTO(encomienda);
     }
 
-    public String obtenerEstadoEncomienda(Long id) {
+    public String obtenerEstado(Long id) {
         Encomienda encomienda = encomiendaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Encomienda no encontrada con N° de Tracking: " + id));
         return encomienda.getEstado();
