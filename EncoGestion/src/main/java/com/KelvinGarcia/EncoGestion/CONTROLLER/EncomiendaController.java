@@ -19,14 +19,14 @@ public class EncomiendaController {
     private final EncomiendaService encomiendaService;
 
     @GetMapping("/clientes/{id}")
-    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByCliente(@PathVariable String id) {
-        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByClienteId(id);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> obtenerEncomiendasDelCliente(@PathVariable String id) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.obtenerEncomiendasDelClienteId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
     @GetMapping("/repartidores/{id}")
-    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByRepartidor(@PathVariable String id) {
-        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByRepartidorId(id);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> obtenerEncomiendasDelRepartidor(@PathVariable String id) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.obtenerEncomiendasDelRepartidorId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 

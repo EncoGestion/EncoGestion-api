@@ -34,8 +34,8 @@ public class EncomiendaService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public List<EncomiendaHistorialDTO> getEncomiendasByClienteId(String id) {
-        List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromCliente(id);
+    public List<EncomiendaHistorialDTO> obtenerEncomiendasDelClienteId(String id) {
+        List<Encomienda> encomiendas = encomiendaRepository.obtenerEncomiendasDelCliente(id);
         List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("No hay encomiendas para el DNI:  "+id+" o no existe el usuario");
@@ -52,8 +52,8 @@ public class EncomiendaService {
     }
 
     @Transactional(readOnly = true)
-    public List<EncomiendaHistorialDTO> getEncomiendasByRepartidorId(String id) {
-        List<Encomienda> encomiendas = encomiendaRepository.getEncomiendaFromRepartidor(id);
+    public List<EncomiendaHistorialDTO> obtenerEncomiendasDelRepartidorId(String id) {
+        List<Encomienda> encomiendas = encomiendaRepository.obtenerEncomiendasDelRepartidor(id);
         List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
         if(encomiendas.isEmpty()){
             throw new ResourceNotFoundException("El repartidor mo tiene encomiendas o no existe");
