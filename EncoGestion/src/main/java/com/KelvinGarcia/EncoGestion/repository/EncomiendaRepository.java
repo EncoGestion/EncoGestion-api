@@ -28,12 +28,12 @@ public interface EncomiendaRepository extends JpaRepository<Encomienda, Long> {
     @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.repartidor=:repartidor ")
     List<Encomienda> obtenerEncomiendaPorFecha_RepartidorID(@Param("fecha") LocalDate fecha, @Param("repartidor") Repartidor repartidor);
 
-    @Query("SELECT e FROM Encomienda e WHERE e.proOrigen = :proOrigen AND e.estado = :estado AND e.proDestino = " +
-            "(SELECT sub.proDestino FROM Encomienda sub WHERE sub.proOrigen = :proOrigen AND sub.estado = :estado " +
+    @Query("SELECT e FROM Encomienda e WHERE e.proOrigen = :proOrigen AND e.estado = 'Por enviar' AND e.proDestino = " +
+            "(SELECT sub.proDestino FROM Encomienda sub WHERE sub.proOrigen = :proOrigen AND sub.estado = 'Por enviar' " +
             "GROUP BY sub.proDestino HAVING COUNT(sub.proDestino) = " +
             "(SELECT MAX(counted) FROM (SELECT COUNT(innerSub.proDestino) AS counted FROM Encomienda innerSub " +
-            "WHERE innerSub.proOrigen = :proOrigen AND innerSub.estado = :estado GROUP BY innerSub.proDestino)))")
-    List<Encomienda> buscarEncomiendasParaAsignar(@Param("proOrigen") String proOrigen, @Param("estado") String estado );
+            "WHERE innerSub.proOrigen = :proOrigen AND innerSub.estado = 'Por enviar' GROUP BY innerSub.proDestino)))")
+    List<Encomienda> buscarEncomiendasParaAsignar(@Param("proOrigen") String proOrigen);
 
     @Modifying
     @Query("UPDATE Encomienda e SET e.repartidor = :repartidor, e.estado = 'En camino' WHERE e.id = :id")

@@ -148,10 +148,10 @@ public class EncomiendaService {
     }
 
     @Transactional
-    public List<EncomiendaHistorialDTO> asignarEncomienda(String proOrigen, String estado, String id_repartidor) {
+    public List<EncomiendaHistorialDTO> asignarEncomienda(String proOrigen, String id_repartidor) {
         Repartidor repartidor = repartidorRepository.findById(id_repartidor)
                 .orElseThrow(()-> new ResourceNotFoundException("Repartidor no encontrada con el id: "+id_repartidor));
-        List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado);
+        List<Encomienda> encomiendas = encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen);
 
         List<EncomiendaHistorialDTO> encomiendaHistorialDTOs = new ArrayList<>();
 
