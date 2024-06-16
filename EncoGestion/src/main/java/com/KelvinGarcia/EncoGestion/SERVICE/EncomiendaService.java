@@ -175,7 +175,7 @@ public class EncomiendaService {
     }
 
     @Transactional
-    public EncomiendaResponseDTO crearEncomienda(EncomiendaRequestDTO encomiendaRequestDTO, String idCliente) {
+    public EncomiendaResponseDTO registrarEncomienda(EncomiendaRequestDTO encomiendaRequestDTO, String idCliente) {
         Long id;
         Encomienda encomiendaPrueba;
         Encomienda encomienda = new Encomienda();
@@ -191,6 +191,7 @@ public class EncomiendaService {
             }while(encomiendaPrueba!=null);
 
             encomiendaRequestDTO.setId(id);
+            encomiendaRequestDTO.setEstado("Por enviar");
             encomiendaRequestDTO.setClienteRemitente(clienteRemitente);
             encomienda = encomiendaMapper.convertToEntity(encomiendaRequestDTO);
             encomiendaRepository.save(encomienda);

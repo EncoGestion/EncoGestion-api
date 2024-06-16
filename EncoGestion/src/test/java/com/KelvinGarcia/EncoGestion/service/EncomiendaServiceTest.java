@@ -156,7 +156,7 @@ public class EncomiendaServiceTest {
     }
 
     @Test
-    public void testCrearEncomiendaClienteExiste(){
+    public void testRegistrarEncomiendaClienteExiste(){
         String id = "12345";
         Cliente cliente = new Cliente();
         cliente.setId(id);
@@ -172,21 +172,21 @@ public class EncomiendaServiceTest {
 
         when(encomiendaMapper.convertToDTO(encomienda)).thenReturn(encomiendaResponseDTO);
 
-        EncomiendaResponseDTO response = encomiendaService.crearEncomienda(encomiendaRequestDTO, id);
+        EncomiendaResponseDTO response = encomiendaService.registrarEncomienda(encomiendaRequestDTO, id);
 
         assertNotNull(response);
         assertEquals(encomiendaResponseDTO, response);
     }
 
     @Test
-    public void testCrearEncomiendaClienteNoExiste(){
+    public void testRegistrarEncomiendaClienteNoExiste(){
 
     String id = "12345";
     EncomiendaRequestDTO encomiendaRequestDTO = new EncomiendaRequestDTO();
 
     when(clienteRepository.buscarPorId(id)).thenReturn(null);
 
-    assertThrows(ResourceNotFoundException.class, () -> encomiendaService.crearEncomienda(encomiendaRequestDTO, id));
+    assertThrows(ResourceNotFoundException.class, () -> encomiendaService.registrarEncomienda(encomiendaRequestDTO, id));
     }
 
     @Test

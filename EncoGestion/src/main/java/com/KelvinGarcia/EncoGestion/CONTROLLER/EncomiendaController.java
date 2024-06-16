@@ -1,7 +1,6 @@
 package com.KelvinGarcia.EncoGestion.CONTROLLER;
 
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -57,7 +56,7 @@ public class EncomiendaController {
 
     @PostMapping
     public ResponseEntity<EncomiendaResponseDTO> crearEncomienda(@Validated @RequestBody EncomiendaRequestDTO encomiendaRequestDTO, @RequestParam("clienteRemitente") String clienteRemitente){
-        EncomiendaResponseDTO encomienda = encomiendaService.crearEncomienda(encomiendaRequestDTO, clienteRemitente);
+        EncomiendaResponseDTO encomienda = encomiendaService.registrarEncomienda(encomiendaRequestDTO, clienteRemitente);
         return new ResponseEntity<>(encomienda, HttpStatus.CREATED);
     }
 

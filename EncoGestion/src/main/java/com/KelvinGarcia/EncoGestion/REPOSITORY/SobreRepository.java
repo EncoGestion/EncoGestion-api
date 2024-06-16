@@ -12,4 +12,7 @@ public interface SobreRepository extends JpaRepository<Sobre, Long> {
 
     @Query("SELECT s FROM Sobre s WHERE s.encomienda= :encomienda")
     List<Sobre> listaDeSobre(@Param("encomienda") Encomienda encomienda);
+
+    @Query("SELECT s FROM Sobre s WHERE s.id= :id")
+    Sobre buscarSobreId(@Param("id")Long id);
 }
