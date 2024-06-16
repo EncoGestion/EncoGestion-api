@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RepartidorRepository extends JpaRepository<Repartidor, Long> {
+public interface RepartidorRepository extends JpaRepository<Repartidor, String> {
 
     Optional<Repartidor> findById(String id);
 

@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RepartidorServiceTest {
@@ -75,5 +75,30 @@ public class RepartidorServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> repartidorService.inicioSesionRepartidor(repartidorSesionDTO));
 
+    }
+
+    @Test
+    public void testEliminarNoExisteRepartidor(){
+        String idRepartidor = "12345678";
+
+        when(repartidorRepository.existsById(idRepartidor)).thenReturn(false);
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> repartidorService.eliminar(idRepartidor));
+        assertEquals("Repartidor no encontrado con ID: "+idRepartidor, exception.getMessage());
+    }
+
+    @Test
+    public void testEliminarRepartidorExiste(){
+        String idRepartidor = "12345678";
+
+        when(repartidorRepository.existsById(idRepartidor)).thenReturn(true);
+        doNothing().when(repartidorRepository).deleteById(idRepartidor);
+
+        assertDoesNotThrow(()-> {
+            repartidorService.eliminar(idRepartidor);
+        });
+
+        verify(repartidorRepository, times(1)).existsById(idRepartidor);
+        verify(repartidorRepository, times(1)).deleteById(idRepartidor);
     }
 }
