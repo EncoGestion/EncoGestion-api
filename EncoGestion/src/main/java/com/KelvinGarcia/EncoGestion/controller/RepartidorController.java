@@ -35,4 +35,10 @@ public class RepartidorController {
         return new ResponseEntity<>(repartidor, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminar(@PathVariable String id) {
+        repartidorService.eliminar(id);
+        return ResponseEntity.ok("Cuenta de repartidor eliminada con éxito");
+    }
+
 }
