@@ -1,10 +1,10 @@
 package com.KelvinGarcia.EncoGestion.service;
 
-import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
-import com.KelvinGarcia.EncoGestion.MAPPER.ClienteMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Cliente;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.ClienteRepository;
-import com.KelvinGarcia.EncoGestion.SERVICE.ClienteService;
+import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
+import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
+import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
+import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
+import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,11 +41,14 @@ public class ClienteServiceTest {
         when(clienteRepository.save(cliente)).thenReturn(cliente);
 
         String contraseñaNueva = "56789";
+        ClienteResponseCompletoDTO clienteResponseCompletoDTO = new ClienteResponseCompletoDTO();
 
-        Cliente response = clienteService.cambiarContraseña(id, contraseñaNueva);
+        when(clienteMapper.convertToCompletoDTO(cliente)).thenReturn(clienteResponseCompletoDTO);
+
+        ClienteResponseCompletoDTO response = clienteService.cambiarContraseña(id, contraseñaNueva);
 
         assertNotNull(response);
-        assertEquals(cliente, response);
+        assertEquals(clienteResponseCompletoDTO, response);
     }
 
     @Test

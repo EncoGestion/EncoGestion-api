@@ -1,13 +1,13 @@
 package com.KelvinGarcia.EncoGestion.service;
 
-import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
-import com.KelvinGarcia.EncoGestion.MAPPER.RepartidorMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorRequestDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorSesionDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Repartidor;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.RepartidorRepository;
-import com.KelvinGarcia.EncoGestion.SERVICE.RepartidorService;
+import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
+import com.KelvinGarcia.EncoGestion.mapper.RepartidorMapper;
+import com.KelvinGarcia.EncoGestion.model.dto.RepartidorRequestDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.RepartidorResponseCompletoDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.RepartidorResponseDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.entity.Repartidor;
+import com.KelvinGarcia.EncoGestion.repository.RepartidorRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,18 +49,18 @@ public class RepartidorServiceTest {
 
     @Test
     public void testInicioSesionRepartidorExiste(){
-        RepartidorSesionDTO repartidorSesionDTO = new RepartidorSesionDTO();
+        SesionDTO sesionDTO = new SesionDTO();
         String correo = "example@example.com";
         String contraseña = "contraseña";
-        repartidorSesionDTO.setCorreo(correo);
-        repartidorSesionDTO.setContraseña(contraseña);
+        sesionDTO.setCorreo(correo);
+        sesionDTO.setContraseña(contraseña);
         Repartidor repartidor = new Repartidor();
         repartidor.setCorreo(correo);
         repartidor.setContrasenia(contraseña);
 
-        when(repartidorRepository.inicioSesionRepartidor(repartidorSesionDTO.getCorreo())).thenReturn(repartidor);
+        when(repartidorRepository.inicioSesionRepartidor(sesionDTO.getCorreo())).thenReturn(repartidor);
 
-        Boolean result = repartidorService.inicioSesionRepartidor(repartidorSesionDTO);
+        Boolean result = repartidorService.inicioSesionRepartidor(sesionDTO);
 
         assertNotNull(result);
         assertTrue(result);
@@ -69,13 +69,13 @@ public class RepartidorServiceTest {
     @Test
     public void testInicioSesionRepartidorNoExiste(){
 
-        RepartidorSesionDTO repartidorSesionDTO = new RepartidorSesionDTO();
+        SesionDTO sesionDTO = new SesionDTO();
         String correo = "example@example.com";
-        repartidorSesionDTO.setCorreo(correo);
+        sesionDTO.setCorreo(correo);
 
-        when(repartidorRepository.inicioSesionRepartidor(repartidorSesionDTO.getCorreo())).thenReturn(null);
+        when(repartidorRepository.inicioSesionRepartidor(sesionDTO.getCorreo())).thenReturn(null);
 
-        assertThrows(ResourceNotFoundException.class, () -> repartidorService.inicioSesionRepartidor(repartidorSesionDTO));
+        assertThrows(ResourceNotFoundException.class, () -> repartidorService.inicioSesionRepartidor(sesionDTO));
 
     }
 
@@ -94,11 +94,14 @@ public class RepartidorServiceTest {
         when(repartidorRepository.save(repartidor)).thenReturn(repartidor);
 
         String contraseñaNueva = "56789";
+        RepartidorResponseCompletoDTO repartidorResponseCompletoDTO = new RepartidorResponseCompletoDTO();
 
-        Repartidor response = repartidorService.cambiarContraseña(id, contraseñaNueva);
+        when(repartidorMapper.convertToCompletoDTO(repartidor)).thenReturn(repartidorResponseCompletoDTO);
+
+        RepartidorResponseCompletoDTO response = repartidorService.cambiarContraseña(id, contraseñaNueva);
 
         assertNotNull(response);
-        assertEquals(repartidor, response);
+        assertEquals(repartidorResponseCompletoDTO, response);
     }
 
     @Test
