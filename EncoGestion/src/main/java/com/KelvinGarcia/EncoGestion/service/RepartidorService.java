@@ -57,4 +57,12 @@ public class RepartidorService {
         return repartidorMapper.convertToCompletoDTO(repartidor);
     }
 
+    @Transactional
+    public void eliminar(String id) {
+        if (!repartidorRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Repartidor no encontrado con ID: " + id);
+        }
+        repartidorRepository.deleteById(id);
+    }
+
 }

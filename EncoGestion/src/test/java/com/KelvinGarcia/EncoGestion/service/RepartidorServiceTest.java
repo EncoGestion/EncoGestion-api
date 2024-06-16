@@ -17,7 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 public class RepartidorServiceTest {
@@ -114,5 +118,34 @@ public class RepartidorServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> repartidorService.cambiarContraseña(id, contraseña));
     }
-    
+
+    @Test
+    public void testEliminarCuenta_NoExisteId() {
+        String id = "12345678";
+
+        when(repartidorRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            repartidorService.eliminar(id);
+        });
+
+        verify(repartidorRepository, times(1)).existsById(id);
+        verify(repartidorRepository, never()).deleteById(id);
+    }
+
+    @Test
+    public void testEliminarCuenta_ExisteId() {
+        String id = "12345678";
+
+        when(repartidorRepository.existsById(id)).thenReturn(true);
+        doNothing().when(repartidorRepository).deleteById(id);
+
+        assertDoesNotThrow(() -> {
+            repartidorService.eliminar(id);
+        });
+
+        verify(repartidorRepository, times(1)).existsById(id);
+        verify(repartidorRepository, times(1)).deleteById(id);
+    }
+
 }
