@@ -191,6 +191,7 @@ public class EncomiendaService {
             }while(encomiendaPrueba!=null);
 
             encomiendaRequestDTO.setId(id);
+            encomiendaRequestDTO.setEstado("Por enviar");
             encomiendaRequestDTO.setClienteRemitente(clienteRemitente);
             encomienda = encomiendaMapper.convertToEntity(encomiendaRequestDTO);
             encomiendaRepository.save(encomienda);

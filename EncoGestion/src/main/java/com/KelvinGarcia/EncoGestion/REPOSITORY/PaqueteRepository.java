@@ -12,4 +12,8 @@ public interface PaqueteRepository extends JpaRepository<Paquete, Long> {
 
     @Query("SELECT p FROM Paquete p WHERE p.encomienda= :encomienda")
     List<Paquete> listaDePaquete(@Param("encomienda")Encomienda encomienda);
+
+    @Query("SELECT p FROM Paquete p WHERE p.id= :id")
+    Paquete buscarPaqueteId(@Param("id")Long id);
+
 }

@@ -1,7 +1,6 @@
 package com.KelvinGarcia.EncoGestion.CONTROLLER;
 
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
