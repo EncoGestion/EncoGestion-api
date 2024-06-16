@@ -34,6 +34,15 @@ public class RepartidorControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
+    @Test
+    public void testCambiarContraseña() throws Exception {
+        String contraseña = "SAMUEL";
+        mockMvc.perform(MockMvcRequestBuilders.patch("/repartidores/{id}", "95624875")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contraseña))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
     private String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
