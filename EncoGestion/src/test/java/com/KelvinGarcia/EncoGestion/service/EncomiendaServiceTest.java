@@ -350,7 +350,6 @@ public class EncomiendaServiceTest {
 
         when(repartidorRepository.findById(id_repartidor)).thenReturn(Optional.of(repartidor));
 
-        String estado = "Por enviar";
         String proOrigen = "Trujillo";
         Encomienda encomienda1 = new Encomienda();
         encomienda1.setId(1L);
@@ -358,7 +357,7 @@ public class EncomiendaServiceTest {
         encomienda2.setId(2L);
         List<Encomienda> encomiendas = Arrays.asList(encomienda1, encomienda2);
 
-        when(encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado)).thenReturn(encomiendas);
+        when(encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen)).thenReturn(encomiendas);
 
         PaqueteResponseDTO paquete1 = new PaqueteResponseDTO();
         PaqueteResponseDTO paquete2 = new PaqueteResponseDTO();
@@ -384,7 +383,7 @@ public class EncomiendaServiceTest {
         when(encomiendaMapper.convertToHistorialDTO(encomienda1, paquetes, sobres)).thenReturn(encomiendaDTO1);
         when(encomiendaMapper.convertToHistorialDTO(encomienda2, paquetes, sobres)).thenReturn(encomiendaDTO2);
 
-        List<EncomiendaHistorialDTO> result = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
+        List<EncomiendaHistorialDTO> result = encomiendaService.asignarEncomienda(proOrigen, id_repartidor);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -400,10 +399,9 @@ public class EncomiendaServiceTest {
 
         when(repartidorRepository.findById(id_repartidor)).thenReturn(Optional.empty());
 
-        String estado = "Por enviar";
         String proOrigen = "Trujillo";
 
-        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor));
+        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.asignarEncomienda(proOrigen, id_repartidor));
     }
 
     @Test
@@ -415,12 +413,11 @@ public class EncomiendaServiceTest {
 
         when(repartidorRepository.findById(id_repartidor)).thenReturn(Optional.of(repartidor));
 
-        String estado = "Por enviar";
         String proOrigen = "Trujillo";
 
-        when(encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen, estado)).thenReturn(Collections.emptyList());
+        when(encomiendaRepository.buscarEncomiendasParaAsignar(proOrigen)).thenReturn(Collections.emptyList());
 
-        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor));
+        assertThrows(ResourceNotFoundException.class, () -> encomiendaService.asignarEncomienda(proOrigen, id_repartidor));
     }
   
     @Test

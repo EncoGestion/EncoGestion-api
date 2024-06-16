@@ -40,4 +40,11 @@ public class EncomiendaControllerIntegrationTest {
                         .param("fecha", "2024-06-15"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void testAsignarEncomiendasPorProOrigen() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/asignacion/{idRepartidor}", "95624875")
+                        .param("proOrigen", "Lima"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
