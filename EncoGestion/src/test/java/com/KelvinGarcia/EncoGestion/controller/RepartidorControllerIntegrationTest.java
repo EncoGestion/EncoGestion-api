@@ -1,6 +1,6 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.RepartidorRequestDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.RepartidorRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
