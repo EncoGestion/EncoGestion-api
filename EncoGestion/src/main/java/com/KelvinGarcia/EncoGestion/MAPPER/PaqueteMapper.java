@@ -1,5 +1,6 @@
 package com.KelvinGarcia.EncoGestion.MAPPER;
 
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteRequestDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Paquete;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ public class PaqueteMapper {
 
     private final ModelMapper modelMapper;
 
-    public Paquete convertToEntity(PaqueteResponseDTO paqueteResponseDTO) {
-        return modelMapper.map(paqueteResponseDTO, Paquete.class);
+    public Paquete convertToEntity(PaqueteRequestDTO paqueteRequestDTO) {
+        return modelMapper.map(paqueteRequestDTO, Paquete.class);
     }
 
     public PaqueteResponseDTO convertToDTO(Paquete paquete) {

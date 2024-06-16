@@ -1,5 +1,7 @@
 package com.KelvinGarcia.EncoGestion.MODEL.DTO;
 
+import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaqueteRequestDTO {
 
+    @Nullable
+    private Long id;
     @NotNull(message = "El ancho no puede ser vacio")
     @DecimalMin(value = "0.01", message = "La cantidad debe ser mayor que cero")
     private float ancho;
@@ -23,4 +27,7 @@ public class PaqueteRequestDTO {
     @NotNull(message = "El peso no puede ser vacio")
     @DecimalMin(value = "0.01", message = "La cantidad debe ser mayor que cero")
     private float peso;
+    @Nullable
+    private Encomienda encomienda;
+
 }
