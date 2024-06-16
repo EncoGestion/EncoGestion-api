@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -76,4 +78,38 @@ public class RepartidorServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> repartidorService.inicioSesionRepartidor(repartidorSesionDTO));
 
     }
+
+    @Test
+    public void testCambiarContraseñaRepartidorExiste(){
+
+        String id = "12345";
+        Repartidor repartidor = new Repartidor();
+        repartidor.setId(id);
+
+        when(repartidorRepository.findById(id)).thenReturn(Optional.of(repartidor));
+
+        String contraseña = "12345";
+        repartidor.setContrasenia(contraseña);
+
+        when(repartidorRepository.save(repartidor)).thenReturn(repartidor);
+
+        String contraseñaNueva = "56789";
+
+        Repartidor response = repartidorService.cambiarContraseña(id, contraseñaNueva);
+
+        assertNotNull(response);
+        assertEquals(repartidor, response);
+    }
+
+    @Test
+    public void testCambiarContraseñaRepartidorNoExiste(){
+
+        String id = "12345";
+        String contraseña = "12345";
+
+        when(repartidorRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> repartidorService.cambiarContraseña(id, contraseña));
+    }
+
 }
