@@ -1,9 +1,13 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
+import com.KelvinGarcia.EncoGestion.model.dto.EncomiendaRequestDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.source.tree.LineMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -46,5 +50,31 @@ public class EncomiendaControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/asignacion/{idRepartidor}", "95624875")
                         .param("proOrigen", "Lima"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testRegisterSobre() throws Exception {
+        EncomiendaRequestDTO encomiendaRequestDTO = new EncomiendaRequestDTO();
+        encomiendaRequestDTO.setDepOrigen("La Libertad");
+        encomiendaRequestDTO.setProOrigen("Trujillo");
+        encomiendaRequestDTO.setDisOrigen("Trujillo");
+        encomiendaRequestDTO.setDepDestino("Lima");
+        encomiendaRequestDTO.setProDestino("Lima");
+        encomiendaRequestDTO.setDisDestino("San Borja");
+        encomiendaRequestDTO.setContraseña("12345");
+        encomiendaRequestDTO.setClienteDestinatario("75659832");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/encomiendas/{idClienteRemitente}", "62539184")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(encomiendaRequestDTO)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    private String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
