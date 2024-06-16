@@ -1,7 +1,6 @@
 package com.KelvinGarcia.EncoGestion.CONTROLLER;
 
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.*;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
 import com.KelvinGarcia.EncoGestion.SERVICE.EncomiendaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,21 +18,15 @@ public class EncomiendaController {
 
     private final EncomiendaService encomiendaService;
 
-    @GetMapping
-    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendas() {
-        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getAllEncomiendas();
-        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
-    }
-
     @GetMapping("/clientes/{id}")
-    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByCliente(@PathVariable String id) {
-        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByClienteId(id);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> obtenerEncomiendasDelCliente(@PathVariable String id) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.obtenerEncomiendasDelClienteId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
     @GetMapping("/repartidores/{id}")
-    public ResponseEntity<List<EncomiendaHistorialDTO>> getAllEncomiendasByRepartidor(@PathVariable String id) {
-        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.getEncomiendasByRepartidorId(id);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> obtenerEncomiendasDelRepartidor(@PathVariable String id) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.obtenerEncomiendasDelRepartidorId(id);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
@@ -43,22 +36,34 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
+    @GetMapping("/repartidores/fecha/{repartidorID}")
+    public ResponseEntity<List<EncomiendaHistorialDTO>> bucarEncomiendasDeRepartidorPorFecha(@PathVariable String repartidorID, @RequestParam("fecha") LocalDate fecha) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.buscarEncomiendaDeRepartidorPorFecha(fecha, repartidorID);
+        return new ResponseEntity<>(encomiendas, HttpStatus.OK);
+    }
+
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Encomienda> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
-        Encomienda encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
+    public ResponseEntity<EncomiendaGmailDTO> actualizarEstado(@PathVariable Long id, @RequestBody ActualizarEstadoEncomiendaDTO actualizarEstadoDTO) {
+        EncomiendaGmailDTO encomiendaActualizada = encomiendaService.actualizarEstado(id, actualizarEstadoDTO.getEstado());
         return ResponseEntity.ok(encomiendaActualizada);
     }
 
     @GetMapping("/repartidores/asignacion/{proOrigen}")
-    public ResponseEntity<List<EncomiendaResponseDTO>> asignarEncomiendasPorProOrigen(@PathVariable String proOrigen, @RequestParam("estado") String estado, @RequestParam("id_repartidor") String id_repartidor) {
-        List<EncomiendaResponseDTO> encomiendas = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
+    public ResponseEntity<List<EncomiendaHistorialDTO>> asignarEncomiendasPorProOrigen(@PathVariable String proOrigen, @RequestParam("estado") String estado, @RequestParam("id_repartidor") String id_repartidor) {
+        List<EncomiendaHistorialDTO> encomiendas = encomiendaService.asignarEncomienda(proOrigen, estado, id_repartidor);
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<EncomiendaResponseDTO> crearEncomienda(@Validated @RequestBody EncomiendaRequestDTO encomiendaRequestDTO, @RequestParam("clienteRemitente") String clienteRemitente){
-        EncomiendaResponseDTO encomienda = encomiendaService.crearEncomienda(encomiendaRequestDTO, clienteRemitente);
+        EncomiendaResponseDTO encomienda = encomiendaService.registrarEncomienda(encomiendaRequestDTO, clienteRemitente);
         return new ResponseEntity<>(encomienda, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/consultar")
+    public ResponseEntity<String> consultarEstado(@PathVariable Long id) {
+        String estado = encomiendaService.obtenerEstado(id);
+        return ResponseEntity.ok(estado);
     }
 }
 

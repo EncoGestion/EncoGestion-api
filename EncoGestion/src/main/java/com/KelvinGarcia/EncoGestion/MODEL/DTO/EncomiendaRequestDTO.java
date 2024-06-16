@@ -37,7 +37,7 @@ public class EncomiendaRequestDTO {
     @Nullable
     private LocalDate hora;
     @Nullable
-    private LocalDate estado;
+    private String estado;
     @NotBlank(message = "Tienes que ingresar el DNI del destinatario")
     private String clienteDestinatario;
     @Nullable

@@ -2,6 +2,7 @@ package com.KelvinGarcia.EncoGestion.CONFIG;
 
 import com.KelvinGarcia.EncoGestion.EXCEPTION.BadRequestException;
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ContraseñaEnUsoException;
+import com.KelvinGarcia.EncoGestion.EXCEPTION.EstadoYaAsignadoException;
 import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -51,6 +52,11 @@ public class RestExceptionHanlder {
 
     @ExceptionHandler(ContraseñaEnUsoException.class)
     public ProblemDetail handleContraseñaEnUsoException(ContraseñaEnUsoException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(EstadoYaAsignadoException.class)
+    public ProblemDetail handleEstadoYaAsignadoException(EstadoYaAsignadoException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 }

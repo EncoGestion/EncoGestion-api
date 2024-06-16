@@ -1,5 +1,6 @@
 package com.KelvinGarcia.EncoGestion.MAPPER;
 
+import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreRequestDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
 import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Sobre;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ public class SobreMapper {
 
     private final ModelMapper modelMapper;
 
-    public Sobre convertToEntity(SobreResponseDTO sobreResponseDTO){
-        return modelMapper.map(sobreResponseDTO, Sobre.class);
+    public Sobre convertToEntity(SobreRequestDTO sobreRequestDTO){
+        return modelMapper.map(sobreRequestDTO, Sobre.class);
     }
 
     public SobreResponseDTO convertToDTO(Sobre sobre){

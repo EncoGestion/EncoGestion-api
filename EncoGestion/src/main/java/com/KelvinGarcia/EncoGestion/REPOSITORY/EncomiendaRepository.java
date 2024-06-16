@@ -16,19 +16,17 @@ public interface EncomiendaRepository extends JpaRepository<Encomienda, Long> {
     @Query("SELECT e FROM Encomienda e WHERE e.id=:encomiendaID")
     Encomienda findBySourceOrEncomiendaID(@Param("encomiendaID") Long encomiendaID);
 
-    @Query("SELECT e.fecha, COUNT(e) FROM Encomienda  e WHERE e.fecha BETWEEN :fechaInicio AND :fechaFin AND (e.id=:encomiendaID) GROUP BY e.fecha")
-    List<Object[]> getEncomiendaByDateRangeAndEncomiendaID(@Param("fechaInicio") LocalDate fechaInicio,
-                                                           @Param("fechaFin") LocalDate fechaFin,
-                                                           @Param("encomiendaID") Long encomiendaID);
-
     @Query("SELECT e FROM Encomienda e JOIN e.clienteRemitente c WHERE c.id = :clienteID")
-    List<Encomienda> getEncomiendaFromCliente(@Param("clienteID") String clienteID);
+    List<Encomienda> obtenerEncomiendasDelCliente(@Param("clienteID") String clienteID);
 
     @Query("SELECT e FROM Encomienda e JOIN e.repartidor r WHERE r.id = :repartidorID")
-    List<Encomienda> getEncomiendaFromRepartidor(@Param("repartidorID") String repartidorID);
+    List<Encomienda> obtenerEncomiendasDelRepartidor(@Param("repartidorID") String repartidorID);
 
     @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.clienteRemitente=:cliente ")
     List<Encomienda> getEncomiendaByDateAndClienteID(@Param("fecha") LocalDate fecha, @Param("cliente") Cliente cliente);
+
+    @Query("SELECT e FROM Encomienda  e WHERE e.fecha=:fecha AND e.repartidor=:repartidor ")
+    List<Encomienda> getEncomiendaByDateAndRepartidorID(@Param("fecha") LocalDate fecha, @Param("repartidor") Repartidor repartidor);
 
     @Query("SELECT e FROM Encomienda e WHERE e.proOrigen = :proOrigen AND e.estado = :estado AND e.proDestino = " +
             "(SELECT sub.proDestino FROM Encomienda sub WHERE sub.proOrigen = :proOrigen AND sub.estado = :estado " +
