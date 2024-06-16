@@ -54,9 +54,9 @@ public class EncomiendaController {
         return new ResponseEntity<>(encomiendas, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<EncomiendaResponseDTO> crearEncomienda(@Validated @RequestBody EncomiendaRequestDTO encomiendaRequestDTO, @RequestParam("clienteRemitente") String clienteRemitente){
-        EncomiendaResponseDTO encomienda = encomiendaService.registrarEncomienda(encomiendaRequestDTO, clienteRemitente);
+    @PostMapping("/{idClienteRemitente}")
+    public ResponseEntity<EncomiendaResponseDTO> crearEncomienda(@Validated @RequestBody EncomiendaRequestDTO encomiendaRequestDTO, @PathVariable String idClienteRemitente){
+        EncomiendaResponseDTO encomienda = encomiendaService.registrarEncomienda(encomiendaRequestDTO, idClienteRemitente);
         return new ResponseEntity<>(encomienda, HttpStatus.CREATED);
     }
 
