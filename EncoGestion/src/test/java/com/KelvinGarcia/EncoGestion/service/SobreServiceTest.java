@@ -1,14 +1,13 @@
 package com.KelvinGarcia.EncoGestion.service;
 
-import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
-import com.KelvinGarcia.EncoGestion.MAPPER.SobreMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreRequestDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.SobreResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Sobre;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.SobreRepository;
-import com.KelvinGarcia.EncoGestion.SERVICE.SobreService;
+import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
+import com.KelvinGarcia.EncoGestion.mapper.SobreMapper;
+import com.KelvinGarcia.EncoGestion.model.dto.SobreRequestDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.SobreResponseDTO;
+import com.KelvinGarcia.EncoGestion.model.entity.Encomienda;
+import com.KelvinGarcia.EncoGestion.model.entity.Sobre;
+import com.KelvinGarcia.EncoGestion.repository.EncomiendaRepository;
+import com.KelvinGarcia.EncoGestion.repository.SobreRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,7 +35,7 @@ public class SobreServiceTest {
         Encomienda encomienda = new Encomienda();
         encomienda.setId(id);
 
-        when(encomiendaRepository.findBySourceOrEncomiendaID(id)).thenReturn(encomienda);
+        when(encomiendaRepository.buscarEncomiendaID(id)).thenReturn(encomienda);
 
         Sobre sobre = new Sobre();
         SobreRequestDTO sobreRequestDTO  = new SobreRequestDTO();
@@ -57,7 +56,7 @@ public class SobreServiceTest {
     public void testRegistrarSobreEncomiendaNoExiste(){
         Long id = 1L;
 
-        when(encomiendaRepository.findBySourceOrEncomiendaID(id)).thenReturn(null);
+        when(encomiendaRepository.buscarEncomiendaID(id)).thenReturn(null);
 
         SobreRequestDTO sobreRequestDTO  = new SobreRequestDTO();
 
