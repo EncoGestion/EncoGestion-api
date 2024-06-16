@@ -1,5 +1,6 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
+import com.KelvinGarcia.EncoGestion.model.dto.ActualizarEstadoEncomiendaDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.EncomiendaRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.source.tree.LineMap;
@@ -68,6 +69,17 @@ public class EncomiendaControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(encomiendaRequestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    public void testNotificarAutomaticamente() throws Exception {
+        ActualizarEstadoEncomiendaDTO actualizarEstadoDTO = new ActualizarEstadoEncomiendaDTO();
+        actualizarEstadoDTO.setEstado("Entregado");
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/encomiendas/{id}/estado", "100")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(actualizarEstadoDTO)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private String asJsonString(final Object obj) {

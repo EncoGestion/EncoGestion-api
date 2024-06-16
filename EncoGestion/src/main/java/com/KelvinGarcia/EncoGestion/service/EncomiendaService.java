@@ -119,7 +119,7 @@ public class EncomiendaService {
     }
 
     @Transactional
-    public EncomiendaGmailDTO actualizarEstado(Long id, String nuevoEstado) {
+    public EncomiendaGmailDTO notificarAutomaticamente(Long id, String nuevoEstado) {
         Encomienda encomienda = encomiendaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Encomienda no encontrada"));
         String contenidoCorreo, correo;
 
