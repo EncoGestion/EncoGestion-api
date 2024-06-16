@@ -421,7 +421,7 @@ public class EncomiendaServiceTest {
     }
   
     @Test
-    public void testActualizarEstado_ExisteId_EstadoNoAsignado() {
+    public void testNotificarAutomaticamente_ExisteId_EstadoNoAsignado() {
 
         Encomienda encomienda = new Encomienda();
         encomienda.setId(1L);
@@ -445,14 +445,14 @@ public class EncomiendaServiceTest {
         EncomiendaGmailDTO expectedDto = new EncomiendaGmailDTO();
         when(encomiendaMapper.convertToGmailDTO(contenidoCorreo, correo)).thenReturn(expectedDto);
 
-        EncomiendaGmailDTO resultado = encomiendaService.actualizarEstado(1L, "En camino");
+        EncomiendaGmailDTO resultado = encomiendaService.notificarAutomaticamente(1L, "En camino");
 
         assertNotNull(resultado);
         assertEquals(expectedDto, resultado);
     }
 
     @Test
-    public void testActualizarEstado_ExisteId_EstadoAsignado(){
+    public void testNotificarAutomaticamente_ExisteId_EstadoAsignado(){
 
         Encomienda encomienda = new Encomienda();
         encomienda.setId(1L);
@@ -460,12 +460,12 @@ public class EncomiendaServiceTest {
 
         when(encomiendaRepository.findById(1L)).thenReturn(Optional.of(encomienda));
 
-        assertThrows(EstadoYaAsignadoException.class, () -> encomiendaService.actualizarEstado(1L, "Pendiente"));
+        assertThrows(EstadoYaAsignadoException.class, () -> encomiendaService.notificarAutomaticamente(1L, "Pendiente"));
 
     }
 
     @Test
-    public void testActualizarEstado_NoExisteId(){
+    public void testNotificarAutomaticamente_NoExisteId(){
 
         Long id = 1L;
         Encomienda encomienda = new Encomienda();
@@ -473,7 +473,7 @@ public class EncomiendaServiceTest {
 
         when(encomiendaRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, ()->encomiendaService.actualizarEstado(id, "En camino"));
+        assertThrows(ResourceNotFoundException.class, ()->encomiendaService.notificarAutomaticamente(id, "En camino"));
 
     }
 
