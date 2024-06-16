@@ -1,14 +1,13 @@
 package com.KelvinGarcia.EncoGestion.service;
 
-import com.KelvinGarcia.EncoGestion.EXCEPTION.ResourceNotFoundException;
-import com.KelvinGarcia.EncoGestion.MAPPER.PaqueteMapper;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteRequestDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.DTO.PaqueteResponseDTO;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Encomienda;
-import com.KelvinGarcia.EncoGestion.MODEL.ENTITY.Paquete;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.EncomiendaRepository;
-import com.KelvinGarcia.EncoGestion.REPOSITORY.PaqueteRepository;
-import com.KelvinGarcia.EncoGestion.SERVICE.PaqueteService;
+import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
+import com.KelvinGarcia.EncoGestion.mapper.PaqueteMapper;
+import com.KelvinGarcia.EncoGestion.model.dto.PaqueteRequestDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.PaqueteResponseDTO;
+import com.KelvinGarcia.EncoGestion.model.entity.Encomienda;
+import com.KelvinGarcia.EncoGestion.model.entity.Paquete;
+import com.KelvinGarcia.EncoGestion.repository.EncomiendaRepository;
+import com.KelvinGarcia.EncoGestion.repository.PaqueteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,7 +35,7 @@ public class PaqueteServiceTest {
         Encomienda encomienda = new Encomienda();
         encomienda.setId(id);
 
-        when(encomiendaRepository.findBySourceOrEncomiendaID(id)).thenReturn(encomienda);
+        when(encomiendaRepository.buscarEncomiendaID(id)).thenReturn(encomienda);
 
         Paquete paquete = new Paquete();
         PaqueteRequestDTO paqueteRequestDTO = new PaqueteRequestDTO();
@@ -57,7 +56,7 @@ public class PaqueteServiceTest {
     public void testRegistrarPaqueteEncomiendaNoExiste(){
         Long id = 1L;
 
-        when(encomiendaRepository.findBySourceOrEncomiendaID(id)).thenReturn(null);
+        when(encomiendaRepository.buscarEncomiendaID(id)).thenReturn(null);
 
         PaqueteRequestDTO paqueteRequestDTO = new PaqueteRequestDTO();
 

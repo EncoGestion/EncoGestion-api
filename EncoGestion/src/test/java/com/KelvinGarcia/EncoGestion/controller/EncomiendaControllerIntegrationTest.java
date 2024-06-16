@@ -26,4 +26,18 @@ public class EncomiendaControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/{id}", "95624875"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void testBucarEncomiendasDeClientePorFecha() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/fecha/{clienteID}", "75074590")
+                        .param("fecha", "2024-06-15"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testBuscarEncomiendasDeRepartidorPorFecha() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/fecha/{repartidorID}", "95624875")
+                        .param("fecha", "2024-06-15"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
