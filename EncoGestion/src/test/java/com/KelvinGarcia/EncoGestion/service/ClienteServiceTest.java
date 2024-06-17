@@ -5,6 +5,7 @@ import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClienteServiceTest {
@@ -25,6 +26,18 @@ public class ClienteServiceTest {
     private ClienteMapper clienteMapper;
     @InjectMocks
     private ClienteService clienteService;
+
+    private Cliente cliente;
+
+    @BeforeEach
+    void setUp() {
+        cliente = new Cliente();
+        cliente.setId("1");
+        cliente.setNombre("Juan");
+        cliente.setContrasenia("juan2763");
+        cliente.setCorreo("juanv87@example.com");
+        cliente.setTelefono("927361823");
+    }
 
     @Test
     public void testCambiarContraseñaClienteExiste(){
@@ -62,4 +75,55 @@ public class ClienteServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> clienteService.cambiarContraseña(id, contraseña));
     }
 
+    @Test
+    public void testActualizacionCompleta() {
+        Cliente clienteActualizado = new Cliente();
+        clienteActualizado.setContrasenia("juan276");
+        clienteActualizado.setCorreo("juan02@example.com");
+        clienteActualizado.setTelefono("927638192");
+
+        when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
+
+        Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
+
+        assertEquals("juan276", resultado.getContrasenia());
+        assertEquals("juan02@example.com", resultado.getCorreo());
+        assertEquals("927638192", resultado.getTelefono());
+
+        assertNotNull(resultado);
+        verify(clienteRepository, times(1)).findById("1");
+        verify(clienteRepository, times(1)).save(any(Cliente.class));
+    }
+
+    @Test
+    public void testActualizacionParcial() {
+        Cliente clienteActualizado = new Cliente();
+        clienteActualizado.setTelefono("926371823");
+
+        when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+
+        Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
+
+        assertEquals("juan2763", resultado.getContrasenia());
+        assertEquals("juanv87@example.com", resultado.getCorreo());
+        assertEquals("926371823", resultado.getTelefono());
+
+        verify(clienteRepository, times(1)).findById("1");
+        verify(clienteRepository, times(1)).save(any(Cliente.class));
+    }
+
+    @Test
+    public void testActualizarDatos_ClienteNoEncontrado() {
+        Cliente clienteActualizado = new Cliente();
+        clienteActualizado.setContrasenia("juan7825");
+
+        when(clienteRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> clienteService.actualizarDatos("1", clienteActualizado));
+
+        verify(clienteRepository, times(1)).findById("1");
+        verify(clienteRepository, never()).save(any(Cliente.class));
+    }
 }

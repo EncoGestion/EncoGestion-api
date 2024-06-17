@@ -28,18 +28,21 @@ public class ClienteService {
     }
 
     @Transactional
-    public ClienteResponseDTO actualizarDatos(String id, ClienteRequestDTO clienteRequestDTO){
+    public Cliente actualizarDatos(String id, Cliente clienteActualizado){
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el id: "+id));
 
-        cliente.setId(clienteRequestDTO.getId());
-        cliente.setNombre(clienteRequestDTO.getNombre());
-        cliente.setContrasenia(clienteRequestDTO.getContrasenia());
-        cliente.setCorreo(clienteRequestDTO.getCorreo());
-        cliente.setTelefono(clienteRequestDTO.getTelefono());
+        if (clienteActualizado.getContrasenia() != null) {
+            cliente.setContrasenia(clienteActualizado.getContrasenia());
+        }
+        if (clienteActualizado.getCorreo() != null) {
+            cliente.setCorreo(clienteActualizado.getCorreo());
+        }
+        if (clienteActualizado.getTelefono() != null) {
+            cliente.setTelefono(clienteActualizado.getTelefono());
+        }
 
-        cliente = clienteRepository.save(cliente);
-        return clienteMapper.convertToDTO(cliente);
+        return clienteRepository.save(cliente);
     }
 
     @Transactional

@@ -4,6 +4,7 @@ import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.service.ClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,11 +27,11 @@ public class ClienteController {
     return new ResponseEntity<>(cuentaCreada, HttpStatus.CREATED);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<ClienteResponseDTO> actualizarDatos(@PathVariable String id,
-                                                              @RequestBody ClienteRequestDTO clienteDTO){
-        ClienteResponseDTO datosActualizados = clienteService.actualizarDatos(id, clienteDTO);
-        return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> actualizarDatos(@PathVariable String id,
+                                                              @RequestBody Cliente clienteActualizado){
+        Cliente clienteActualizadoResultado = clienteService.actualizarDatos(id, clienteActualizado);
+        return new ResponseEntity<>(clienteActualizadoResultado, HttpStatus.OK);
     }
 
     @PatchMapping("{id}")
