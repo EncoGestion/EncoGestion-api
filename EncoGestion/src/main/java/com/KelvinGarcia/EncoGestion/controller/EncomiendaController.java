@@ -2,6 +2,7 @@ package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.service.EncomiendaService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,5 +65,11 @@ public class EncomiendaController {
     public ResponseEntity<String> consultarEstado(@PathVariable Long id) {
         String estado = encomiendaService.consultarEstado(id);
         return ResponseEntity.ok(estado);
+    }
+
+    @PostMapping("/cotizar")
+    public ResponseEntity<CotizacionResponseDTO> cotizarEncomienda(@Valid @RequestBody CotizarEncomiendaRequestDTO encomiendaDTO){
+        CotizacionResponseDTO cotizacion = encomiendaService.cotizarEncomienda(encomiendaDTO);
+        return new ResponseEntity<>(cotizacion, HttpStatus.OK);
     }
 }
