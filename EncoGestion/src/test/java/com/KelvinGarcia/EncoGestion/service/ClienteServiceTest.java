@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClienteServiceTest {
@@ -60,6 +60,24 @@ public class ClienteServiceTest {
         when(clienteRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> clienteService.cambiarContraseña(id, contraseña));
+    }
+
+    @Test
+    public void testEliminarCliente_NoExiste(){
+        String id = "43177628";
+
+        when(clienteRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () -> clienteService.eliminarCliente(id));
+    }
+
+    @Test
+    public void testEliminarCliente_Existe(){
+        String id = "43188722";
+
+        when(clienteRepository.existsById(id)).thenReturn(true);
+
+        clienteService.eliminarCliente(id);
     }
 
 }

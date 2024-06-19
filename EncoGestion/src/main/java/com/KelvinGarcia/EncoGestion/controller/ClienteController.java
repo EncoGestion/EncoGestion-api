@@ -52,10 +52,6 @@ public class ClienteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarCliente(@PathVariable String id) {
-        if (id == null || id.trim().isEmpty()) {
-            throw new IllegalArgumentException("El ID del cliente es obligatorio");
-        }
-
         clienteService.eliminarCliente(id);
         return ResponseEntity.ok("Cuenta de cliente eliminada con éxito");
     }

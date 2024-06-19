@@ -24,4 +24,12 @@ public class ClienteControllerIntegrationTest {
                         .content(contraseña))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void testEliminarCliente() throws Exception{
+        String id = "18726351";
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/clientes/{id}", id))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
