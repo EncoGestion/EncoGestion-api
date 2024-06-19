@@ -29,9 +29,6 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el id: "+id));
 
-        if (editarClienteDTO.getContrasenia() != null) {
-            cliente.setContrasenia(editarClienteDTO.getContrasenia());
-        }
         if (editarClienteDTO.getCorreo() != null) {
             cliente.setCorreo(editarClienteDTO.getCorreo());
         }

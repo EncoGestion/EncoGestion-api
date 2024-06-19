@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class EditarClienteRequestDTO {
-    private String contrasenia;
-
     @Email(message = "El correo debe ser válido")
     private String correo;
 

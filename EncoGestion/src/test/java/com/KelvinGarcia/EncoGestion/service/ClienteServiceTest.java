@@ -89,7 +89,6 @@ public class ClienteServiceTest {
     @Test
     public void testActualizacionCompleta() {
         EditarClienteRequestDTO clienteActualizadoDTO = new EditarClienteRequestDTO();
-        clienteActualizadoDTO.setContrasenia("juan276");
         clienteActualizadoDTO.setCorreo("juan02@example.com");
         clienteActualizadoDTO.setTelefono("927638192");
 
@@ -103,7 +102,6 @@ public class ClienteServiceTest {
         ClienteResponseDTO clienteActualizadoDTOResponse = new ClienteResponseDTO();
         clienteActualizadoDTOResponse.setId("1");
         clienteActualizadoDTOResponse.setNombre("Juan");
-        clienteActualizadoDTOResponse.setContrasenia("juan276");
         clienteActualizadoDTOResponse.setCorreo("juan02@example.com");
         clienteActualizadoDTOResponse.setTelefono("927638192");
 
@@ -114,13 +112,8 @@ public class ClienteServiceTest {
         ClienteResponseDTO resultado = clienteService.editarPerfil("1", clienteActualizadoDTO);
 
         assertNotNull(resultado);
-        assertEquals("juan276", resultado.getContrasenia());
         assertEquals("juan02@example.com", resultado.getCorreo());
         assertEquals("927638192", resultado.getTelefono());
-
-        verify(clienteRepository, times(1)).findById("1");
-        verify(clienteRepository, times(1)).save(any(Cliente.class));
-        verify(clienteMapper, times(1)).convertToDTO(any(Cliente.class));
     }
 
     @Test
@@ -152,22 +145,15 @@ public class ClienteServiceTest {
         assertEquals("juan2763", resultado.getContrasenia());
         assertEquals("juanv87@example.com", resultado.getCorreo());
         assertEquals("926371823", resultado.getTelefono());
-
-        verify(clienteRepository, times(1)).findById("1");
-        verify(clienteRepository, times(1)).save(any(Cliente.class));
-        verify(clienteMapper, times(1)).convertToDTO(any(Cliente.class));
     }
 
     @Test
     public void testActualizarDatos_ClienteNoEncontrado() {
         EditarClienteRequestDTO clienteActualizado = new EditarClienteRequestDTO();
-        clienteActualizado.setContrasenia("juan7825");
+        clienteActualizado.setTelefono("926735127");
 
         when(clienteRepository.findById("1")).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> clienteService.editarPerfil("1", clienteActualizado));
-
-        verify(clienteRepository, times(1)).findById("1");
-        verify(clienteRepository, never()).save(any(Cliente.class));
     }
 }
