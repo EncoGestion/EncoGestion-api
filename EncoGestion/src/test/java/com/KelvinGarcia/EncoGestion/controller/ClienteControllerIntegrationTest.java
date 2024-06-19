@@ -32,11 +32,16 @@ public class ClienteControllerIntegrationTest {
     @Test
     public void testEditarPerfil() throws Exception {
         ClienteRequestDTO clienteActualizado = new ClienteRequestDTO();
-        clienteActualizado.setCorreo("samuel2002@gmail.com");
+        clienteActualizado.setCorreo("samuel2003@gmail.com");
         clienteActualizado.setTelefono("920205522");
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/clientes/{id}", "60928285")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(clienteActualizado)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-
+    @Test
     public void testEliminarCliente() throws Exception{
         String id = "18726351";
 
