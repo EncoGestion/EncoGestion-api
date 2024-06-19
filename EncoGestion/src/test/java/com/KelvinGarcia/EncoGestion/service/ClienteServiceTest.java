@@ -5,6 +5,7 @@ import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.EditarClienteRequestDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +32,6 @@ public class ClienteServiceTest {
 
     private Cliente cliente;
 
-    private ClienteResponseDTO clienteResponseDTO;
-
     @BeforeEach
     void setUp() {
         cliente = new Cliente();
@@ -41,13 +40,6 @@ public class ClienteServiceTest {
         cliente.setContrasenia("juan2763");
         cliente.setCorreo("juanv87@example.com");
         cliente.setTelefono("927361823");
-
-        clienteResponseDTO = new ClienteResponseDTO();
-        clienteResponseDTO.setId("1");
-        clienteResponseDTO.setNombre("Juan");
-        clienteResponseDTO.setContrasenia("juan2763");
-        clienteResponseDTO.setCorreo("juanv87@example.com");
-        clienteResponseDTO.setTelefono("927361823");
     }
 
     @Test
@@ -87,6 +79,41 @@ public class ClienteServiceTest {
     }
 
     @Test
+    public void testEliminarCliente_NoExiste(){
+        String id = "43177628";
+
+        when(clienteRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () -> clienteService.eliminarCliente(id));
+    }
+
+    @Test
+    public void testEliminarCliente_Existe(){
+        String id = "43188722";
+
+        when(clienteRepository.existsById(id)).thenReturn(true);
+
+        clienteService.eliminarCliente(id);
+    }
+
+    @Test
+    public void testCrearCliente(){
+        Cliente cliente = new Cliente();
+        ClienteRequestDTO clienteRequestDTO = new ClienteRequestDTO();
+
+        when(clienteMapper.convertToEntiTy(clienteRequestDTO)).thenReturn(cliente);
+
+        ClienteResponseDTO clienteResponseDTO  = new ClienteResponseDTO();
+
+        when(clienteMapper.convertToDTO(cliente)).thenReturn(clienteResponseDTO);
+
+        ClienteResponseDTO result = clienteService.crearCuenta(clienteRequestDTO);
+
+        assertNotNull(result);
+        assertEquals(result, clienteResponseDTO);
+    }
+
+  @Test
     public void testActualizacionCompleta() {
         EditarClienteRequestDTO clienteActualizadoDTO = new EditarClienteRequestDTO();
         clienteActualizadoDTO.setCorreo("juan02@example.com");
