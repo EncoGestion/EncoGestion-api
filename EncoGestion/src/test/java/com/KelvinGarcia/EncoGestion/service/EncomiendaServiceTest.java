@@ -478,18 +478,18 @@ public class EncomiendaServiceTest {
     }
 
     @Test
-    public void testObtenerEstado_NoExisteId(){
+    public void testConsultarEstado_NoExisteId(){
         Long id = 1L;
         Encomienda encomienda = new Encomienda();
         encomienda.setId(id);
 
         when(encomiendaRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, ()->encomiendaService.obtenerEstado(id));
+        assertThrows(ResourceNotFoundException.class, ()->encomiendaService.consultarEstado(id));
     }
 
     @Test
-    public void testObtenerEstado_ExisteId(){
+    public void testConsultarEstado_ExisteId(){
         Long id = 1L;
         String expectedEstado = "Entregado";    //Aquí puede ser Entregado, En camino o En recepción
 
@@ -499,7 +499,7 @@ public class EncomiendaServiceTest {
 
         when(encomiendaRepository.findById(id)).thenReturn(Optional.of(encomienda));
 
-        String actualEstado = encomiendaService.obtenerEstado(id);
+        String actualEstado = encomiendaService.consultarEstado(id);
 
         assertEquals(expectedEstado, actualEstado);
     }
