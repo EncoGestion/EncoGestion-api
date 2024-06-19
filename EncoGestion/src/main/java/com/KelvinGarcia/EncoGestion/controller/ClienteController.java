@@ -21,19 +21,19 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> crearCuenta(@RequestBody
+    public ResponseEntity<ClienteResponseDTO> crearCuenta(@Valid @RequestBody
                                                           ClienteRequestDTO clienteDTO){
     ClienteResponseDTO cuentaCreada = clienteService.crearCuenta(clienteDTO);
     return new ResponseEntity<>(cuentaCreada, HttpStatus.CREATED);
     }
-
+  
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> actualizarDatos(@PathVariable String id,
                                                               @RequestBody Cliente clienteActualizado){
         Cliente clienteActualizadoResultado = clienteService.actualizarDatos(id, clienteActualizado);
         return new ResponseEntity<>(clienteActualizadoResultado, HttpStatus.OK);
-    }
 
+   
     @PatchMapping("{id}")
     public ResponseEntity<ClienteResponseCompletoDTO> cambiarContraseña(@PathVariable String id, @RequestBody String contraseña){
         ClienteResponseCompletoDTO cliente = clienteService.cambiarContraseña(id, contraseña);
@@ -49,6 +49,12 @@ public class ClienteController {
             return ResponseEntity.status(401).body(e.getMessage());
         }
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarCliente(@PathVariable String id) {
+        clienteService.eliminarCliente(id);
+        return ResponseEntity.ok("Cuenta de cliente eliminada con éxito");
     }
 
 }

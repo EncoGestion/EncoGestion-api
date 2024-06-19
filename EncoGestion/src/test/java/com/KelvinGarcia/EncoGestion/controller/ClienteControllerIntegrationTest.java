@@ -1,5 +1,7 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
+import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
+
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,31 @@ public class ClienteControllerIntegrationTest {
     }
 
     @Test
-    public void testActualizarDatos() throws Exception {
+
+    public void testEliminarCliente() throws Exception{
+        String id = "18726351";
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/clientes/{id}", id))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testCrearCliente() throws Exception{
+        ClienteRequestDTO clienteRequestDTO = new ClienteRequestDTO();
+
+        clienteRequestDTO.setId("82763512");
+        clienteRequestDTO.setNombre("Kelvin");
+        clienteRequestDTO.setContrasenia("kelvin");
+        clienteRequestDTO.setCorreo("kelvin@gmail.com");
+        clienteRequestDTO.setTelefono("928736123");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/clientes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(clienteRequestDTO)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+  
+  public void testActualizarDatos() throws Exception {
         Cliente clienteActualizado = new Cliente();
         clienteActualizado.setCorreo("samuel1985@gmail.com");
         clienteActualizado.setTelefono("920203365");

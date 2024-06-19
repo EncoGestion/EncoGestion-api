@@ -62,7 +62,7 @@ public class EncomiendaController {
 
     @GetMapping("/{id}/consultar")
     public ResponseEntity<String> consultarEstado(@PathVariable Long id) {
-        String estado = encomiendaService.obtenerEstado(id);
+        String estado = encomiendaService.consultarEstado(id);
         return ResponseEntity.ok(estado);
     }
 }

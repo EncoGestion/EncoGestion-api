@@ -56,6 +56,14 @@ public class    RepartidorControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void testEliminarRepartidor() throws Exception{
+        String id = "95624875";
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/repartidores/{id}", id))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
     private String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

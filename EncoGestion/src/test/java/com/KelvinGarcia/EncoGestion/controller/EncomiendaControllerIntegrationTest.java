@@ -82,6 +82,14 @@ public class EncomiendaControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void testConsultarEstado() throws Exception{
+        Long id = 1L;
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/{id}/consultar", id))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
     private String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
