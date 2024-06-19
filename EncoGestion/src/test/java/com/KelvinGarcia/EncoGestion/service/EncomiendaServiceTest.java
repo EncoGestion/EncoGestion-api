@@ -504,4 +504,32 @@ public class EncomiendaServiceTest {
         assertEquals(expectedEstado, actualEstado);
     }
 
+    @Test
+    public void testCotizarEncomienda_Sobre() {
+        CotizarEncomiendaRequestDTO requestDTO = new CotizarEncomiendaRequestDTO();
+        requestDTO.setPeso(10.0);
+        requestDTO.setAltura(0.0);
+        requestDTO.setAncho(0.0);
+        requestDTO.setLargo(0.0);
+
+        CotizacionResponseDTO responseDTO = encomiendaService.cotizarEncomienda(requestDTO);
+
+        double costoEsperado = 10.0 * 5;
+        assertEquals(costoEsperado, responseDTO.getCostoEnvio());
+    }
+
+    @Test
+    public void testCotizarEncomienda_Paquete() {
+        CotizarEncomiendaRequestDTO requestDTO = new CotizarEncomiendaRequestDTO();
+        requestDTO.setPeso(2.0);
+        requestDTO.setAltura(2.0);
+        requestDTO.setAncho(3.0);
+        requestDTO.setLargo(4.0);
+
+        CotizacionResponseDTO responseDTO = encomiendaService.cotizarEncomienda(requestDTO);
+
+        double CostoEsperado = 2.0 * 1 + 2.0 * 0.1 + 3.0 * 0.1 + 4.0 * 0.1;
+        assertEquals(CostoEsperado, responseDTO.getCostoEnvio());
+    }
+
 }

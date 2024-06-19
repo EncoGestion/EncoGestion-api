@@ -33,11 +33,11 @@ public class EncomiendaMapper {
 
     public EncomiendaHistorialDTO convertToHistorialDTO(Encomienda encomienda, List<PaqueteResponseDTO> paquetes, List<SobreResponseDTO> sobres){
 
-            EncomiendaHistorialDTO historialDTO = modelMapper.map(encomienda, EncomiendaHistorialDTO.class);
-            historialDTO.setPaquetes(paquetes);
-            historialDTO.setSobres(sobres);
+        EncomiendaHistorialDTO historialDTO = modelMapper.map(encomienda, EncomiendaHistorialDTO.class);
+        historialDTO.setPaquetes(paquetes);
+        historialDTO.setSobres(sobres);
 
-            return historialDTO;
+        return historialDTO;
     }
 
     public EncomiendaGmailDTO convertToGmailDTO(String contenidoGmail, String correo){
