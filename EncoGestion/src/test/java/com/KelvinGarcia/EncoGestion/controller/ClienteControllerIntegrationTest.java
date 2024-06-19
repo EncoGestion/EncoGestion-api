@@ -1,7 +1,6 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
-
 import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +30,12 @@ public class ClienteControllerIntegrationTest {
     }
 
     @Test
+    public void testEditarPerfil() throws Exception {
+        ClienteRequestDTO clienteActualizado = new ClienteRequestDTO();
+        clienteActualizado.setCorreo("samuel2002@gmail.com");
+        clienteActualizado.setTelefono("920205522");
+    }
+
 
     public void testEliminarCliente() throws Exception{
         String id = "18726351";

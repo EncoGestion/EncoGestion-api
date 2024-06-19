@@ -2,6 +2,9 @@ package com.KelvinGarcia.EncoGestion.service;
 
 import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
+import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.EditarClienteRequestDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
@@ -110,57 +113,76 @@ public class ClienteServiceTest {
         assertEquals(result, clienteResponseDTO);
     }
 
+  @Test
+    public void testActualizacionCompleta() {
+        EditarClienteRequestDTO clienteActualizadoDTO = new EditarClienteRequestDTO();
+        clienteActualizadoDTO.setCorreo("juan02@example.com");
+        clienteActualizadoDTO.setTelefono("927638192");
+
+        Cliente clienteActualizadoEntity = new Cliente();
+        clienteActualizadoEntity.setId("1");
+        clienteActualizadoEntity.setNombre("Juan");
+        clienteActualizadoEntity.setContrasenia("juan276");
+        clienteActualizadoEntity.setCorreo("juan02@example.com");
+        clienteActualizadoEntity.setTelefono("927638192");
+
+        ClienteResponseDTO clienteActualizadoDTOResponse = new ClienteResponseDTO();
+        clienteActualizadoDTOResponse.setId("1");
+        clienteActualizadoDTOResponse.setNombre("Juan");
+        clienteActualizadoDTOResponse.setCorreo("juan02@example.com");
+        clienteActualizadoDTOResponse.setTelefono("927638192");
+
+        when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizadoEntity);
+        when(clienteMapper.convertToDTO(any(Cliente.class))).thenReturn(clienteActualizadoDTOResponse);
+
+        ClienteResponseDTO resultado = clienteService.editarPerfil("1", clienteActualizadoDTO);
+
+        assertNotNull(resultado);
+        assertEquals("juan02@example.com", resultado.getCorreo());
+        assertEquals("927638192", resultado.getTelefono());
+    }
+
     @Test
-      public void testActualizacionCompleta() {
-            Cliente clienteActualizado = new Cliente();
-            clienteActualizado.setContrasenia("juan276");
-            clienteActualizado.setCorreo("juan02@example.com");
-            clienteActualizado.setTelefono("927638192");
+    public void testActualizacionParcial() {
+        EditarClienteRequestDTO clienteActualizadoDTO = new EditarClienteRequestDTO();
+        clienteActualizadoDTO.setTelefono("926371823");
 
-            when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
-            when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
+        Cliente clienteActualizadoEntity = new Cliente();
+        clienteActualizadoEntity.setId("1");
+        clienteActualizadoEntity.setNombre("Juan");
+        clienteActualizadoEntity.setContrasenia("juan2763");
+        clienteActualizadoEntity.setCorreo("juanv87@example.com");
+        clienteActualizadoEntity.setTelefono("926371823");
 
-            Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
+        ClienteResponseDTO clienteActualizadoDTOResponse = new ClienteResponseDTO();
+        clienteActualizadoDTOResponse.setId("1");
+        clienteActualizadoDTOResponse.setNombre("Juan");
+        clienteActualizadoDTOResponse.setContrasenia("juan2763");
+        clienteActualizadoDTOResponse.setCorreo("juanv87@example.com");
+        clienteActualizadoDTOResponse.setTelefono("926371823");
 
-            assertEquals("juan276", resultado.getContrasenia());
-            assertEquals("juan02@example.com", resultado.getCorreo());
-            assertEquals("927638192", resultado.getTelefono());
+        when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizadoEntity);
+        when(clienteMapper.convertToDTO(any(Cliente.class))).thenReturn(clienteActualizadoDTOResponse);
 
-            assertNotNull(resultado);
-            verify(clienteRepository, times(1)).findById("1");
-            verify(clienteRepository, times(1)).save(any(Cliente.class));
-        }
+        ClienteResponseDTO resultado = clienteService.editarPerfil("1", clienteActualizadoDTO);
 
-        @Test
-        public void testActualizacionParcial() {
-            Cliente clienteActualizado = new Cliente();
-            clienteActualizado.setTelefono("926371823");
+        assertNotNull(resultado);
+        assertEquals("juan2763", resultado.getContrasenia());
+        assertEquals("juanv87@example.com", resultado.getCorreo());
+        assertEquals("926371823", resultado.getTelefono());
+    }
 
-            when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
-            when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
-
-            Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
-
-            assertEquals("juan2763", resultado.getContrasenia());
-            assertEquals("juanv87@example.com", resultado.getCorreo());
-            assertEquals("926371823", resultado.getTelefono());
-
-            verify(clienteRepository, times(1)).findById("1");
-            verify(clienteRepository, times(1)).save(any(Cliente.class));
-        }
-
-        @Test
-        public void testActualizarDatos_ClienteNoEncontrado() {
-            Cliente clienteActualizado = new Cliente();
-            clienteActualizado.setContrasenia("juan7825");
-
-            when(clienteRepository.findById("1")).thenReturn(Optional.empty());
-
-            assertThrows(ResourceNotFoundException.class, () -> clienteService.actualizarDatos("1", clienteActualizado));
-
-            verify(clienteRepository, times(1)).findById("1");
-            verify(clienteRepository, never()).save(any(Cliente.class));
-        }
+    @Test
+    public void testActualizarDatos_ClienteNoEncontrado() {
+        EditarClienteRequestDTO clienteActualizado = new EditarClienteRequestDTO();
+        clienteActualizado.setTelefono("926735127");
+      
+        when(clienteRepository.findById("1")).thenReturn(Optional.empty());
+      
+        assertThrows(ResourceNotFoundException.class, () -> clienteService.editarPerfil("1", clienteActualizado));
+    }
 
     @Test
     public void testIniciarSesionCliente_Existe(){
@@ -191,7 +213,7 @@ public class ClienteServiceTest {
 
         Cliente cliente = new Cliente();
         cliente.setCorreo(correo);
-        cliente.setContrasenia("valerio123");
+        cliente.setContrasenia("valerio123");        
 
         when(clienteRepository.iniciarSesionCliente(sesionDTO.getCorreo())).thenReturn(cliente);
 
