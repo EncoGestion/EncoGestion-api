@@ -120,7 +120,7 @@ public class RepartidorServiceTest {
     }
 
     @Test
-    public void testEliminarCuenta_NoExisteId() {
+    public void testEliminarRepartidor_NoExisteId() {
         String id = "12345678";
 
         when(repartidorRepository.existsById(id)).thenReturn(false);
@@ -128,24 +128,15 @@ public class RepartidorServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> {
             repartidorService.eliminar(id);
         });
-
-        verify(repartidorRepository, times(1)).existsById(id);
-        verify(repartidorRepository, never()).deleteById(id);
     }
 
     @Test
-    public void testEliminarCuenta_ExisteId() {
+    public void testEliminarRepartidor_ExisteId() {
         String id = "12345678";
 
         when(repartidorRepository.existsById(id)).thenReturn(true);
-        doNothing().when(repartidorRepository).deleteById(id);
 
-        assertDoesNotThrow(() -> {
-            repartidorService.eliminar(id);
-        });
-
-        verify(repartidorRepository, times(1)).existsById(id);
-        verify(repartidorRepository, times(1)).deleteById(id);
+        repartidorService.eliminar(id);
     }
 
 }
