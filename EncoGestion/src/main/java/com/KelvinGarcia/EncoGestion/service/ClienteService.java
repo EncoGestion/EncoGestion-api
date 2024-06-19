@@ -71,4 +71,12 @@ public class ClienteService {
 
         return sesion;
     }
+
+    @Transactional
+    public void eliminarCliente(String id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Cliente no encontrado con ID: " + id);
+        }
+        clienteRepository.deleteById(id);
+    }
 }
