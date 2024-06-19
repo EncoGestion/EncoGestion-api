@@ -3,10 +3,7 @@ package com.KelvinGarcia.EncoGestion.service;
 import com.KelvinGarcia.EncoGestion.exception.ContraseñaEnUsoException;
 import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.mapper.RepartidorMapper;
-import com.KelvinGarcia.EncoGestion.model.dto.RepartidorRequestDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.RepartidorResponseCompletoDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.RepartidorResponseDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Repartidor;
 import com.KelvinGarcia.EncoGestion.repository.RepartidorRepository;
 import lombok.AllArgsConstructor;
@@ -66,17 +63,18 @@ public class RepartidorService {
     }
 
     @Transactional
-    public Repartidor editarPerfil(String id, Repartidor repartidorActualizado) {
+    public RepartidorResponseCompletoDTO editarPerfil(String id, EditarRepartidorRequestDTO repartidorActualizado) {
         Repartidor repartidor = repartidorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Repartidor no encontrado"));
 
-        repartidor.setContrasenia(repartidorActualizado.getContrasenia());
-        repartidor.setTelefono(repartidorActualizado.getTelefono());
-        repartidor.setCorreo(repartidorActualizado.getCorreo());
-        repartidor.setEstado(repartidorActualizado.getEstado());
-        repartidor.setUbiProvincia(repartidor.getUbiProvincia());
+        if (repartidorActualizado.getCorreo() != null) {
+            repartidor.setCorreo(repartidorActualizado.getCorreo());
+        }
+        if (repartidorActualizado.getTelefono() != null) {
+            repartidor.setTelefono(repartidorActualizado.getTelefono());
+        }
 
-        return repartidorRepository.save(repartidor);
+        return repartidorMapper.convertToCompletoDTO(repartidor);
     }
 
 }

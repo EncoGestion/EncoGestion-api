@@ -68,11 +68,7 @@ public class    RepartidorControllerIntegrationTest {
     @Test
     public void testEditarPerfil() throws Exception {
         Repartidor repartidorActualizado = new Repartidor();
-        repartidorActualizado.setContrasenia("emerson16");
-        repartidorActualizado.setTelefono("928736123");
-        repartidorActualizado.setCorreo("emerson13@example.com");
-        repartidorActualizado.setEstado("ocupado");
-        repartidorActualizado.setUbiProvincia("Trujillo");
+        repartidorActualizado.setTelefono("956748211");
 
         mockMvc.perform(MockMvcRequestBuilders.put("/repartidores/{id}", "32988754")
                         .contentType(MediaType.APPLICATION_JSON)
