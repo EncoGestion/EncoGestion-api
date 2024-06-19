@@ -20,7 +20,7 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> crearCuenta(@RequestBody
+    public ResponseEntity<ClienteResponseDTO> crearCuenta(@Valid @RequestBody
                                                           ClienteRequestDTO clienteDTO){
     ClienteResponseDTO cuentaCreada = clienteService.crearCuenta(clienteDTO);
     return new ResponseEntity<>(cuentaCreada, HttpStatus.CREATED);

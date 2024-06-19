@@ -2,7 +2,7 @@ package com.KelvinGarcia.EncoGestion.service;
 
 import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
 import org.junit.jupiter.api.Test;
@@ -78,6 +78,23 @@ public class ClienteServiceTest {
         when(clienteRepository.existsById(id)).thenReturn(true);
 
         clienteService.eliminarCliente(id);
+    }
+
+    @Test
+    public void testCrearCliente(){
+        Cliente cliente = new Cliente();
+        ClienteRequestDTO clienteRequestDTO = new ClienteRequestDTO();
+
+        when(clienteMapper.convertToEntiTy(clienteRequestDTO)).thenReturn(cliente);
+
+        ClienteResponseDTO clienteResponseDTO  = new ClienteResponseDTO();
+
+        when(clienteMapper.convertToDTO(cliente)).thenReturn(clienteResponseDTO);
+
+        ClienteResponseDTO result = clienteService.crearCuenta(clienteRequestDTO);
+
+        assertNotNull(result);
+        assertEquals(result, clienteResponseDTO);
     }
 
 }
