@@ -65,4 +65,18 @@ public class RepartidorService {
         repartidorRepository.deleteById(id);
     }
 
+    @Transactional
+    public Repartidor editarPerfil(String id, Repartidor repartidorActualizado) {
+        Repartidor repartidor = repartidorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Repartidor no encontrado"));
+
+        repartidor.setContrasenia(repartidorActualizado.getContrasenia());
+        repartidor.setTelefono(repartidorActualizado.getTelefono());
+        repartidor.setCorreo(repartidorActualizado.getCorreo());
+        repartidor.setEstado(repartidorActualizado.getEstado());
+        repartidor.setUbiProvincia(repartidor.getUbiProvincia());
+
+        return repartidorRepository.save(repartidor);
+    }
+
 }
