@@ -3,10 +3,7 @@ package com.KelvinGarcia.EncoGestion.service;
 import com.KelvinGarcia.EncoGestion.exception.ContraseñaEnUsoException;
 import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
 import lombok.AllArgsConstructor;
@@ -28,21 +25,22 @@ public class ClienteService {
     }
 
     @Transactional
-    public Cliente actualizarDatos(String id, Cliente clienteActualizado){
+    public ClienteResponseDTO editarPerfil(String id, EditarClienteRequestDTO editarClienteDTO){
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Cuenta no encontrada con el id: "+id));
 
-        if (clienteActualizado.getContrasenia() != null) {
-            cliente.setContrasenia(clienteActualizado.getContrasenia());
+        if (editarClienteDTO.getContrasenia() != null) {
+            cliente.setContrasenia(editarClienteDTO.getContrasenia());
         }
-        if (clienteActualizado.getCorreo() != null) {
-            cliente.setCorreo(clienteActualizado.getCorreo());
+        if (editarClienteDTO.getCorreo() != null) {
+            cliente.setCorreo(editarClienteDTO.getCorreo());
         }
-        if (clienteActualizado.getTelefono() != null) {
-            cliente.setTelefono(clienteActualizado.getTelefono());
+        if (editarClienteDTO.getTelefono() != null) {
+            cliente.setTelefono(editarClienteDTO.getTelefono());
         }
 
-        return clienteRepository.save(cliente);
+        clienteRepository.save(cliente);
+        return clienteMapper.convertToDTO(cliente);
     }
 
     @Transactional

@@ -3,6 +3,8 @@ package com.KelvinGarcia.EncoGestion.service;
 import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.mapper.ClienteMapper;
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.EditarClienteRequestDTO;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.repository.ClienteRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,8 @@ public class ClienteServiceTest {
 
     private Cliente cliente;
 
+    private ClienteResponseDTO clienteResponseDTO;
+
     @BeforeEach
     void setUp() {
         cliente = new Cliente();
@@ -37,6 +41,13 @@ public class ClienteServiceTest {
         cliente.setContrasenia("juan2763");
         cliente.setCorreo("juanv87@example.com");
         cliente.setTelefono("927361823");
+
+        clienteResponseDTO = new ClienteResponseDTO();
+        clienteResponseDTO.setId("1");
+        clienteResponseDTO.setNombre("Juan");
+        clienteResponseDTO.setContrasenia("juan2763");
+        clienteResponseDTO.setCorreo("juanv87@example.com");
+        clienteResponseDTO.setTelefono("927361823");
     }
 
     @Test
@@ -77,51 +88,84 @@ public class ClienteServiceTest {
 
     @Test
     public void testActualizacionCompleta() {
-        Cliente clienteActualizado = new Cliente();
-        clienteActualizado.setContrasenia("juan276");
-        clienteActualizado.setCorreo("juan02@example.com");
-        clienteActualizado.setTelefono("927638192");
+        EditarClienteRequestDTO clienteActualizadoDTO = new EditarClienteRequestDTO();
+        clienteActualizadoDTO.setContrasenia("juan276");
+        clienteActualizadoDTO.setCorreo("juan02@example.com");
+        clienteActualizadoDTO.setTelefono("927638192");
+
+        Cliente clienteActualizadoEntity = new Cliente();
+        clienteActualizadoEntity.setId("1");
+        clienteActualizadoEntity.setNombre("Juan");
+        clienteActualizadoEntity.setContrasenia("juan276");
+        clienteActualizadoEntity.setCorreo("juan02@example.com");
+        clienteActualizadoEntity.setTelefono("927638192");
+
+        ClienteResponseDTO clienteActualizadoDTOResponse = new ClienteResponseDTO();
+        clienteActualizadoDTOResponse.setId("1");
+        clienteActualizadoDTOResponse.setNombre("Juan");
+        clienteActualizadoDTOResponse.setContrasenia("juan276");
+        clienteActualizadoDTOResponse.setCorreo("juan02@example.com");
+        clienteActualizadoDTOResponse.setTelefono("927638192");
 
         when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizadoEntity);
+        when(clienteMapper.convertToDTO(any(Cliente.class))).thenReturn(clienteActualizadoDTOResponse);
 
-        Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
+        ClienteResponseDTO resultado = clienteService.editarPerfil("1", clienteActualizadoDTO);
 
+        assertNotNull(resultado);
         assertEquals("juan276", resultado.getContrasenia());
         assertEquals("juan02@example.com", resultado.getCorreo());
         assertEquals("927638192", resultado.getTelefono());
 
-        assertNotNull(resultado);
         verify(clienteRepository, times(1)).findById("1");
         verify(clienteRepository, times(1)).save(any(Cliente.class));
+        verify(clienteMapper, times(1)).convertToDTO(any(Cliente.class));
     }
 
     @Test
     public void testActualizacionParcial() {
-        Cliente clienteActualizado = new Cliente();
-        clienteActualizado.setTelefono("926371823");
+        EditarClienteRequestDTO clienteActualizadoDTO = new EditarClienteRequestDTO();
+        clienteActualizadoDTO.setTelefono("926371823");
+
+        Cliente clienteActualizadoEntity = new Cliente();
+        clienteActualizadoEntity.setId("1");
+        clienteActualizadoEntity.setNombre("Juan");
+        clienteActualizadoEntity.setContrasenia("juan2763");
+        clienteActualizadoEntity.setCorreo("juanv87@example.com");
+        clienteActualizadoEntity.setTelefono("926371823");
+
+        ClienteResponseDTO clienteActualizadoDTOResponse = new ClienteResponseDTO();
+        clienteActualizadoDTOResponse.setId("1");
+        clienteActualizadoDTOResponse.setNombre("Juan");
+        clienteActualizadoDTOResponse.setContrasenia("juan2763");
+        clienteActualizadoDTOResponse.setCorreo("juanv87@example.com");
+        clienteActualizadoDTOResponse.setTelefono("926371823");
 
         when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizadoEntity);
+        when(clienteMapper.convertToDTO(any(Cliente.class))).thenReturn(clienteActualizadoDTOResponse);
 
-        Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
+        ClienteResponseDTO resultado = clienteService.editarPerfil("1", clienteActualizadoDTO);
 
+        assertNotNull(resultado);
         assertEquals("juan2763", resultado.getContrasenia());
         assertEquals("juanv87@example.com", resultado.getCorreo());
         assertEquals("926371823", resultado.getTelefono());
 
         verify(clienteRepository, times(1)).findById("1");
         verify(clienteRepository, times(1)).save(any(Cliente.class));
+        verify(clienteMapper, times(1)).convertToDTO(any(Cliente.class));
     }
 
     @Test
     public void testActualizarDatos_ClienteNoEncontrado() {
-        Cliente clienteActualizado = new Cliente();
+        EditarClienteRequestDTO clienteActualizado = new EditarClienteRequestDTO();
         clienteActualizado.setContrasenia("juan7825");
 
         when(clienteRepository.findById("1")).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> clienteService.actualizarDatos("1", clienteActualizado));
+        assertThrows(ResourceNotFoundException.class, () -> clienteService.editarPerfil("1", clienteActualizado));
 
         verify(clienteRepository, times(1)).findById("1");
         verify(clienteRepository, never()).save(any(Cliente.class));

@@ -22,7 +22,7 @@ public class ClienteRequestDTO {
     @NotBlank(message = "La contraseña no puede estar vacia")
     private String contrasenia;
     @NotBlank(message = "El correo no puede estar vacio")
-    @Email
+    @Email(message = "El correo debe ser válido")
     private String correo;
     @NotBlank(message = "El numero de telefono no puede estar vacio")
     @Size(min=6, max=9, message = "El numero de telefono es de 6 a 9 caracteres")

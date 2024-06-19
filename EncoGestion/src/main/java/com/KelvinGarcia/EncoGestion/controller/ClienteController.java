@@ -1,9 +1,6 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseCompletoDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.ClienteResponseDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.KelvinGarcia.EncoGestion.service.ClienteService;
 import lombok.AllArgsConstructor;
@@ -21,16 +18,16 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> crearCuenta(@RequestBody
+    public ResponseEntity<ClienteResponseDTO> crearCuenta(@Valid @RequestBody
                                                           ClienteRequestDTO clienteDTO){
     ClienteResponseDTO cuentaCreada = clienteService.crearCuenta(clienteDTO);
     return new ResponseEntity<>(cuentaCreada, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> actualizarDatos(@PathVariable String id,
-                                                              @RequestBody Cliente clienteActualizado){
-        Cliente clienteActualizadoResultado = clienteService.actualizarDatos(id, clienteActualizado);
+    public ResponseEntity<ClienteResponseDTO> editarPerfil(@PathVariable String id,
+                                                              @Valid @RequestBody EditarClienteRequestDTO clienteRequestDTO){
+        ClienteResponseDTO clienteActualizadoResultado = clienteService.editarPerfil(id, clienteRequestDTO);
         return new ResponseEntity<>(clienteActualizadoResultado, HttpStatus.OK);
     }
 
