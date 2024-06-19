@@ -161,4 +161,40 @@ public class ClienteServiceTest {
             verify(clienteRepository, times(1)).findById("1");
             verify(clienteRepository, never()).save(any(Cliente.class));
         }
+
+    @Test
+    public void testIniciarSesionCliente_Existe(){
+        SesionDTO sesionDTO = new SesionDTO();
+        String correo = "juan@example.com";
+        String contraseña = "valerio";
+        sesionDTO.setCorreo(correo);
+        sesionDTO.setContraseña(contraseña);
+        Cliente cliente = new Cliente();
+        cliente.setCorreo(correo);
+        cliente.setContrasenia(contraseña);
+
+        when(clienteRepository.iniciarSesionCliente(sesionDTO.getCorreo())).thenReturn(cliente);
+
+        Boolean result = clienteService.iniciarSesionCliente(sesionDTO);
+
+        assertNotNull(result);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIniciarSesionCliente_ContraseñaIncorrecta(){
+        SesionDTO sesionDTO = new SesionDTO();
+        String correo = "juan@example.com";
+        String contraseña = "valerio";
+        sesionDTO.setCorreo(correo);
+        sesionDTO.setContraseña(contraseña);
+
+        Cliente cliente = new Cliente();
+        cliente.setCorreo(correo);
+        cliente.setContrasenia("valerio123");
+
+        when(clienteRepository.iniciarSesionCliente(sesionDTO.getCorreo())).thenReturn(cliente);
+
+        assertThrows(ResourceNotFoundException.class, () -> clienteService.iniciarSesionCliente(sesionDTO));
+    }
 }

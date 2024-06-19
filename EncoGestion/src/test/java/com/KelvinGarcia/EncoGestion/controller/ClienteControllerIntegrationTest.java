@@ -2,6 +2,7 @@ package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
 
+import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,18 @@ public class ClienteControllerIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(clienteActualizado)))
                     .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testIniciarSesion() throws Exception{
+        SesionDTO sesionDTO = new SesionDTO();
+        sesionDTO.setCorreo("fiore28@example.com");
+        sesionDTO.setContraseña("fiorella");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/clientes/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(sesionDTO)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private String asJsonString(final Object obj) {
