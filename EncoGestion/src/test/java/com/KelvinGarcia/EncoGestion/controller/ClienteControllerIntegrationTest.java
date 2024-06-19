@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
+
 import com.KelvinGarcia.EncoGestion.model.entity.Cliente;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ public class ClienteControllerIntegrationTest {
     }
 
     @Test
+
     public void testEliminarCliente() throws Exception{
         String id = "18726351";
 
@@ -51,6 +53,17 @@ public class ClienteControllerIntegrationTest {
                         .content(asJsonString(clienteRequestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
+  
+  public void testActualizarDatos() throws Exception {
+        Cliente clienteActualizado = new Cliente();
+        clienteActualizado.setCorreo("samuel1985@gmail.com");
+        clienteActualizado.setTelefono("920203365");
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/clientes/{id}", "60928285")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(clienteActualizado)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
     private String asJsonString(final Object obj) {
         try {
@@ -59,4 +72,5 @@ public class ClienteControllerIntegrationTest {
             throw new RuntimeException(e);
         }
     }
+
 }
