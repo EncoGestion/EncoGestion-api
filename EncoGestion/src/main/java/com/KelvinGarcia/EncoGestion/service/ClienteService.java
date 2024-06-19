@@ -63,10 +63,6 @@ public class ClienteService {
             throw new ResourceNotFoundException("El correo o la contraseña son incorrectas");
         }
 
-        if(cliente.getCorreo().isEmpty()){
-            throw new BadRequestException("El correo no puede ser vacío");
-        }
-
         return sesion;
     }
 

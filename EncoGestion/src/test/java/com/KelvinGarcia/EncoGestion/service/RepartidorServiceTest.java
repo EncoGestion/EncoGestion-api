@@ -17,11 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 public class RepartidorServiceTest {
@@ -137,6 +134,42 @@ public class RepartidorServiceTest {
         when(repartidorRepository.existsById(id)).thenReturn(true);
 
         repartidorService.eliminar(id);
+    }
+
+    @Test
+    public void testEditarPerfil_RepartidorExiste() {
+        String id = "12345678";
+        Repartidor repartidor = new Repartidor();
+        repartidor.setId(id);
+        repartidor.setContrasenia("sergio123");
+
+        Repartidor repartidorActualizado = new Repartidor();
+        repartidorActualizado.setId(id);
+        repartidorActualizado.setContrasenia("sergio1562");
+
+        when(repartidorRepository.findById(id)).thenReturn(Optional.of(repartidor));
+        when(repartidorRepository.save(any(Repartidor.class))).thenReturn(repartidorActualizado);
+
+        Repartidor resultado = repartidorService.editarPerfil(id, repartidorActualizado);
+
+        assertNotNull(resultado);
+        assertEquals("sergio1562", resultado.getContrasenia());
+    }
+
+    @Test
+    public void testEditarPerfil_RepartidorNoExiste() {
+        String id = "12345678";
+        Repartidor repartidorActualizado = new Repartidor();
+        repartidorActualizado.setId(id);
+        repartidorActualizado.setCorreo("sergio22@example.com");
+
+        when(repartidorRepository.findById(id)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
+            repartidorService.editarPerfil(id, repartidorActualizado);
+        });
+
+        assertEquals("Repartidor no encontrado", exception.getMessage());
     }
 
 }

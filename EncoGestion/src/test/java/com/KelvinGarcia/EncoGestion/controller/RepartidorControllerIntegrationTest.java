@@ -2,6 +2,7 @@ package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.RepartidorRequestDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.entity.Repartidor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,21 @@ public class    RepartidorControllerIntegrationTest {
         String id = "95624875";
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/repartidores/{id}", id))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testEditarPerfil() throws Exception {
+        Repartidor repartidorActualizado = new Repartidor();
+        repartidorActualizado.setContrasenia("emerson16");
+        repartidorActualizado.setTelefono("928736123");
+        repartidorActualizado.setCorreo("emerson13@example.com");
+        repartidorActualizado.setEstado("ocupado");
+        repartidorActualizado.setUbiProvincia("Trujillo");
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/repartidores/{id}", "32988754")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(repartidorActualizado)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

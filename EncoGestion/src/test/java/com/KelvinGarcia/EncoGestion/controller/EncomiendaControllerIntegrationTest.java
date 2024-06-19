@@ -1,6 +1,7 @@
 package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.ActualizarEstadoEncomiendaDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.CotizarEncomiendaRequestDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.EncomiendaRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.source.tree.LineMap;
@@ -87,6 +88,27 @@ public class EncomiendaControllerIntegrationTest {
         Long id = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/{id}/consultar", id))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testCotizarEncomienda() throws Exception{
+        CotizarEncomiendaRequestDTO encomiendaDTO = new CotizarEncomiendaRequestDTO();
+        encomiendaDTO.setDepOrigen("La Libertad");
+        encomiendaDTO.setProOrigen("Trujillo");
+        encomiendaDTO.setDisOrigen("Trujillo");
+        encomiendaDTO.setDepDestino("Lima");
+        encomiendaDTO.setProDestino("Lima");
+        encomiendaDTO.setDisDestino("San Borja");
+        encomiendaDTO.setTipoEncomienda("paquete");
+        encomiendaDTO.setPeso(2);
+        encomiendaDTO.setAltura(35);
+        encomiendaDTO.setAncho(40);
+        encomiendaDTO.setLargo(25);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/encomiendas/cotizar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(encomiendaDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
