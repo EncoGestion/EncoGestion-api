@@ -53,16 +53,17 @@ public class ClienteControllerIntegrationTest {
                         .content(asJsonString(clienteRequestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
-  
-  public void testActualizarDatos() throws Exception {
-        Cliente clienteActualizado = new Cliente();
-        clienteActualizado.setCorreo("samuel1985@gmail.com");
-        clienteActualizado.setTelefono("920203365");
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/clientes/{id}", "60928285")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(clienteActualizado)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    @Test
+    public void testActualizarDatos() throws Exception {
+            Cliente clienteActualizado = new Cliente();
+            clienteActualizado.setCorreo("samuel1988@gmail.com");
+            clienteActualizado.setTelefono("920203365");
+
+            mockMvc.perform(MockMvcRequestBuilders.put("/clientes/{id}", "60928285")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(clienteActualizado)))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private String asJsonString(final Object obj) {

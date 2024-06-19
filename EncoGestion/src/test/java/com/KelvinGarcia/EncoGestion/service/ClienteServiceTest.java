@@ -109,55 +109,56 @@ public class ClienteServiceTest {
         assertNotNull(result);
         assertEquals(result, clienteResponseDTO);
     }
-  
-  public void testActualizacionCompleta() {
-        Cliente clienteActualizado = new Cliente();
-        clienteActualizado.setContrasenia("juan276");
-        clienteActualizado.setCorreo("juan02@example.com");
-        clienteActualizado.setTelefono("927638192");
-
-        when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
-
-        Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
-
-        assertEquals("juan276", resultado.getContrasenia());
-        assertEquals("juan02@example.com", resultado.getCorreo());
-        assertEquals("927638192", resultado.getTelefono());
-
-        assertNotNull(resultado);
-        verify(clienteRepository, times(1)).findById("1");
-        verify(clienteRepository, times(1)).save(any(Cliente.class));
-    }
 
     @Test
-    public void testActualizacionParcial() {
-        Cliente clienteActualizado = new Cliente();
-        clienteActualizado.setTelefono("926371823");
+      public void testActualizacionCompleta() {
+            Cliente clienteActualizado = new Cliente();
+            clienteActualizado.setContrasenia("juan276");
+            clienteActualizado.setCorreo("juan02@example.com");
+            clienteActualizado.setTelefono("927638192");
 
-        when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+            when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
+            when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
 
-        Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
+            Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
 
-        assertEquals("juan2763", resultado.getContrasenia());
-        assertEquals("juanv87@example.com", resultado.getCorreo());
-        assertEquals("926371823", resultado.getTelefono());
+            assertEquals("juan276", resultado.getContrasenia());
+            assertEquals("juan02@example.com", resultado.getCorreo());
+            assertEquals("927638192", resultado.getTelefono());
 
-        verify(clienteRepository, times(1)).findById("1");
-        verify(clienteRepository, times(1)).save(any(Cliente.class));
-    }
+            assertNotNull(resultado);
+            verify(clienteRepository, times(1)).findById("1");
+            verify(clienteRepository, times(1)).save(any(Cliente.class));
+        }
 
-    @Test
-    public void testActualizarDatos_ClienteNoEncontrado() {
-        Cliente clienteActualizado = new Cliente();
-        clienteActualizado.setContrasenia("juan7825");
+        @Test
+        public void testActualizacionParcial() {
+            Cliente clienteActualizado = new Cliente();
+            clienteActualizado.setTelefono("926371823");
 
-        when(clienteRepository.findById("1")).thenReturn(Optional.empty());
+            when(clienteRepository.findById("1")).thenReturn(Optional.of(cliente));
+            when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
-        assertThrows(ResourceNotFoundException.class, () -> clienteService.actualizarDatos("1", clienteActualizado));
+            Cliente resultado = clienteService.actualizarDatos("1", clienteActualizado);
 
-        verify(clienteRepository, times(1)).findById("1");
-        verify(clienteRepository, never()).save(any(Cliente.class));
-    }
+            assertEquals("juan2763", resultado.getContrasenia());
+            assertEquals("juanv87@example.com", resultado.getCorreo());
+            assertEquals("926371823", resultado.getTelefono());
+
+            verify(clienteRepository, times(1)).findById("1");
+            verify(clienteRepository, times(1)).save(any(Cliente.class));
+        }
+
+        @Test
+        public void testActualizarDatos_ClienteNoEncontrado() {
+            Cliente clienteActualizado = new Cliente();
+            clienteActualizado.setContrasenia("juan7825");
+
+            when(clienteRepository.findById("1")).thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class, () -> clienteService.actualizarDatos("1", clienteActualizado));
+
+            verify(clienteRepository, times(1)).findById("1");
+            verify(clienteRepository, never()).save(any(Cliente.class));
+        }
 }

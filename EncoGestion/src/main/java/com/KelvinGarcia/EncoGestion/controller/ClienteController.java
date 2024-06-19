@@ -29,11 +29,11 @@ public class ClienteController {
   
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> actualizarDatos(@PathVariable String id,
-                                                              @RequestBody Cliente clienteActualizado){
+                                                              @RequestBody Cliente clienteActualizado) {
         Cliente clienteActualizadoResultado = clienteService.actualizarDatos(id, clienteActualizado);
         return new ResponseEntity<>(clienteActualizadoResultado, HttpStatus.OK);
+    }
 
-   
     @PatchMapping("{id}")
     public ResponseEntity<ClienteResponseCompletoDTO> cambiarContraseña(@PathVariable String id, @RequestBody String contraseña){
         ClienteResponseCompletoDTO cliente = clienteService.cambiarContraseña(id, contraseña);
