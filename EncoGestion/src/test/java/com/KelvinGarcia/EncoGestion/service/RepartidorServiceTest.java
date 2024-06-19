@@ -2,12 +2,10 @@ package com.KelvinGarcia.EncoGestion.service;
 
 import com.KelvinGarcia.EncoGestion.exception.ResourceNotFoundException;
 import com.KelvinGarcia.EncoGestion.mapper.RepartidorMapper;
-import com.KelvinGarcia.EncoGestion.model.dto.RepartidorRequestDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.RepartidorResponseCompletoDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.RepartidorResponseDTO;
-import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
+import com.KelvinGarcia.EncoGestion.model.dto.*;
 import com.KelvinGarcia.EncoGestion.model.entity.Repartidor;
 import com.KelvinGarcia.EncoGestion.repository.RepartidorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +27,18 @@ public class RepartidorServiceTest {
     private RepartidorMapper repartidorMapper;
     @InjectMocks
     private RepartidorService repartidorService;
-
+    private Repartidor repartidor;
+    @BeforeEach
+    void setUp() {
+        repartidor = new Repartidor();
+        repartidor.setId("1");
+        repartidor.setNombre("Juan");
+        repartidor.setContrasenia("juan2763");
+        repartidor.setCorreo("juanv87@example.com");
+        repartidor.setTelefono("927361823");
+        repartidor.setEstado("Libre");
+        repartidor.setUbiProvincia("Trujillo");
+    }
     @Test
     public void testCrearRepartidor(){
 
@@ -138,38 +147,44 @@ public class RepartidorServiceTest {
 
     @Test
     public void testEditarPerfil_RepartidorExiste() {
-        String id = "12345678";
-        Repartidor repartidor = new Repartidor();
-        repartidor.setId(id);
-        repartidor.setContrasenia("sergio123");
+        EditarRepartidorRequestDTO repartidorActualizadoDTO = new EditarRepartidorRequestDTO();
+        repartidorActualizadoDTO.setTelefono("926371823");
 
-        Repartidor repartidorActualizado = new Repartidor();
-        repartidorActualizado.setId(id);
-        repartidorActualizado.setContrasenia("sergio1562");
+        Repartidor repartidorActualizadoEntity = new Repartidor();
+        repartidorActualizadoEntity.setId("1");
+        repartidorActualizadoEntity.setNombre("Juan");
+        repartidorActualizadoEntity.setContrasenia("juan2763");
+        repartidorActualizadoEntity.setCorreo("juanv87@example.com");
+        repartidorActualizadoEntity.setTelefono("926371823");
+        repartidorActualizadoEntity.setEstado("Libre");
+        repartidorActualizadoEntity.setUbiProvincia("Trujillo");
 
-        when(repartidorRepository.findById(id)).thenReturn(Optional.of(repartidor));
-        when(repartidorRepository.save(any(Repartidor.class))).thenReturn(repartidorActualizado);
+        RepartidorResponseCompletoDTO repartidorActualizadoDTOResponse = new RepartidorResponseCompletoDTO();
+        repartidorActualizadoDTOResponse.setId("1");
+        repartidorActualizadoDTOResponse.setNombre("Juan");
+        repartidorActualizadoDTOResponse.setContrasenia("juan2763");
+        repartidorActualizadoDTOResponse.setCorreo("juanv87@example.com");
+        repartidorActualizadoDTOResponse.setTelefono("926371823");
+        repartidorActualizadoDTOResponse.setEstado("Libre");
+        repartidorActualizadoDTOResponse.setUbiProvincia("Trujillo");
 
-        Repartidor resultado = repartidorService.editarPerfil(id, repartidorActualizado);
+        when(repartidorRepository.findById("1")).thenReturn(Optional.of(repartidor));
+        when(repartidorMapper.convertToCompletoDTO(any(Repartidor.class))).thenReturn(repartidorActualizadoDTOResponse);
+
+        RepartidorResponseCompletoDTO resultado = repartidorService.editarPerfil("1", repartidorActualizadoDTO);
 
         assertNotNull(resultado);
-        assertEquals("sergio1562", resultado.getContrasenia());
+        assertEquals("926371823", resultado.getTelefono());
     }
 
     @Test
     public void testEditarPerfil_RepartidorNoExiste() {
-        String id = "12345678";
-        Repartidor repartidorActualizado = new Repartidor();
-        repartidorActualizado.setId(id);
-        repartidorActualizado.setCorreo("sergio22@example.com");
+        EditarRepartidorRequestDTO repartidorActualizadoDTO = new EditarRepartidorRequestDTO();
+        repartidorActualizadoDTO.setTelefono("926371823");
 
-        when(repartidorRepository.findById(id)).thenReturn(Optional.empty());
+        when(repartidorRepository.findById("1")).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
-            repartidorService.editarPerfil(id, repartidorActualizado);
-        });
-
-        assertEquals("Repartidor no encontrado", exception.getMessage());
+        assertThrows(ResourceNotFoundException.class, () -> repartidorService.editarPerfil("1", repartidorActualizadoDTO));
     }
 
 }
