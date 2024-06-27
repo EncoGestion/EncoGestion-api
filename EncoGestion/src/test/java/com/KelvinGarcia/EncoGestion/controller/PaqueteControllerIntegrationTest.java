@@ -26,7 +26,7 @@ public class PaqueteControllerIntegrationTest {
         paqueteRequestDTO.setAncho((float) 0.9);
         paqueteRequestDTO.setPeso((float) 12.4);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/paquetes/{id}", "616520")
+        mockMvc.perform(MockMvcRequestBuilders.post("/paquetes/{id}", "715979")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(paqueteRequestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());

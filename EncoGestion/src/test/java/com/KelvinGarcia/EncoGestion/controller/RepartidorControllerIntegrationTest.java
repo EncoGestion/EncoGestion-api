@@ -38,8 +38,8 @@ public class    RepartidorControllerIntegrationTest {
 
     @Test
     public void testCambiarContraseña() throws Exception {
-        String contraseña = "SAMUEL";
-        mockMvc.perform(MockMvcRequestBuilders.patch("/repartidores/{id}", "95624875")
+        String contraseña = "SAMUEL12";
+        mockMvc.perform(MockMvcRequestBuilders.patch("/repartidores/{id}", "32988754")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contraseña))
                 .andExpect(MockMvcResultMatchers.status().isOk());

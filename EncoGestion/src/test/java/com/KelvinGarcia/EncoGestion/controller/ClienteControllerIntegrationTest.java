@@ -22,8 +22,8 @@ public class ClienteControllerIntegrationTest {
 
     @Test
     public void testCambiarContraseña() throws Exception {
-        String contraseña = "KELVIN";
-        mockMvc.perform(MockMvcRequestBuilders.patch("/clientes/{id}", "82763512")
+        String contraseña = "SAMUEL2325";
+        mockMvc.perform(MockMvcRequestBuilders.patch("/clientes/{id}", "60928285")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contraseña))
                 .andExpect(MockMvcResultMatchers.status().isOk());
