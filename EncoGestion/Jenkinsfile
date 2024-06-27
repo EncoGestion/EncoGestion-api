@@ -48,7 +48,11 @@ pipeline {
             steps {
                 dir('EncoGestion') {
                     script {
-                        dockerImage = docker.build("${env.DOCKER_REGISTRY}/encogestion_api:${env.BUILD_NUMBER}")
+                        if (isUnix()) {
+                            sh 'docker build -t "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}" .'
+                        } else {
+                            bat 'docker build -t "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}" .'
+                        }
                     }
                 }
             }
@@ -58,7 +62,11 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', env.DOCKER_CREDENTIALS_ID) {
-                        dockerImage.push()
+                        if (isUnix()) {
+                            sh 'docker push "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"'
+                        } else {
+                            bat 'docker push "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"'
+                        }
                     }
                 }
             }
@@ -68,8 +76,8 @@ pipeline {
             steps {
                 dir('EncoGestion') {
                     script {
-                        sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
-                        sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${env.DOCKER_REGISTRY}/encogestion_api:${env.BUILD_NUMBER}"
+                        sh "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
+                        sh "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
                     }
                 }
             }
