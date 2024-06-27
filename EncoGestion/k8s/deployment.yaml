@@ -1,0 +1,27 @@
+apiVersion: api/v1
+kind: Deployment
+metadata:
+  name: encogestion-api
+  namespace: my-kubernetes-namespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: encogestion-api
+  template:
+    metadata:
+      labels:
+        app: encogestion-api
+    spec:
+      containers:
+        - name: encogestion-api
+          image: my-docker-registry/encogestion-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://dpg-cpue6ruehbks73efid30-a.oregon-postgres.render.com:5432/encogestion_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: encogestion_db_user
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: ZhXJ51Id3XodaGiBiZGbDP3AQVlUVnHq
