@@ -23,11 +23,11 @@ public class    RepartidorControllerIntegrationTest {
     @Test
     public void testCrearRepartidor() throws Exception {
         RepartidorRequestDTO repartidorRequestDTO = new RepartidorRequestDTO();
-        repartidorRequestDTO.setId("32988754");
-        repartidorRequestDTO.setNombre("Repartidor");
-        repartidorRequestDTO.setContrasenia("REPARTIDOR");
-        repartidorRequestDTO.setTelefono("966352587");
-        repartidorRequestDTO.setCorreo("repartidor@gmail.com");
+        repartidorRequestDTO.setId("95624875");
+        repartidorRequestDTO.setNombre("Sam");
+        repartidorRequestDTO.setContrasenia("Sam");
+        repartidorRequestDTO.setTelefono("966352522");
+        repartidorRequestDTO.setCorreo("sam@gmail.com");
         repartidorRequestDTO.setEstado("Libre");
         repartidorRequestDTO.setUbiProvincia("Lima");
         mockMvc.perform(MockMvcRequestBuilders.post("/repartidores")
