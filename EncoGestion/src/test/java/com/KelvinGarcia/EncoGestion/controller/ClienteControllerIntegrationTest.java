@@ -22,7 +22,7 @@ public class ClienteControllerIntegrationTest {
 
     @Test
     public void testCambiarContraseña() throws Exception {
-        String contraseña = "SAMUEL2325";
+        String contraseña = "SAMUEL";
         mockMvc.perform(MockMvcRequestBuilders.patch("/clientes/{id}", "60928285")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contraseña))
@@ -53,11 +53,11 @@ public class ClienteControllerIntegrationTest {
     public void testCrearCliente() throws Exception{
         ClienteRequestDTO clienteRequestDTO = new ClienteRequestDTO();
 
-        clienteRequestDTO.setId("82763512");
-        clienteRequestDTO.setNombre("Kelvin");
-        clienteRequestDTO.setContrasenia("kelvin");
-        clienteRequestDTO.setCorreo("kelvin@gmail.com");
-        clienteRequestDTO.setTelefono("928736123");
+        clienteRequestDTO.setId("18726351");
+        clienteRequestDTO.setNombre("Emerson");
+        clienteRequestDTO.setContrasenia("emerson");
+        clienteRequestDTO.setCorreo("emerson11@gmail.com");
+        clienteRequestDTO.setTelefono("928736674");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/clientes")
                         .contentType(MediaType.APPLICATION_JSON)

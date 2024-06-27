@@ -38,8 +38,8 @@ public class    RepartidorControllerIntegrationTest {
 
     @Test
     public void testCambiarContraseña() throws Exception {
-        String contraseña = "SAMUEL12";
-        mockMvc.perform(MockMvcRequestBuilders.patch("/repartidores/{id}", "32988754")
+        String contraseña = "SAMUEL";
+        mockMvc.perform(MockMvcRequestBuilders.patch("/repartidores/{id}", "95624875")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contraseña))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -48,8 +48,8 @@ public class    RepartidorControllerIntegrationTest {
     @Test
     public void testLogin() throws Exception {
         SesionDTO sesionDTO = new SesionDTO();
-        sesionDTO.setCorreo("repartidor@gmail.com");
-        sesionDTO.setContraseña("REPARTIDOR");
+        sesionDTO.setCorreo("sam@gmail.com");
+        sesionDTO.setContraseña("SAMUEL");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/repartidores/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +68,7 @@ public class    RepartidorControllerIntegrationTest {
     @Test
     public void testEditarPerfil() throws Exception {
         Repartidor repartidorActualizado = new Repartidor();
-        repartidorActualizado.setTelefono("956748211");
+        repartidorActualizado.setTelefono("956748212");
 
         mockMvc.perform(MockMvcRequestBuilders.put("/repartidores/{id}", "32988754")
                         .contentType(MediaType.APPLICATION_JSON)
