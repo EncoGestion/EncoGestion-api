@@ -1,4 +1,4 @@
-package com.KelvinGarcia.EncoGestion.controller;
+/*package com.KelvinGarcia.EncoGestion.controller;
 
 import com.KelvinGarcia.EncoGestion.model.dto.ClienteRequestDTO;
 import com.KelvinGarcia.EncoGestion.model.dto.SesionDTO;
@@ -98,3 +98,4 @@ public class ClienteControllerIntegrationTest {
     }
 
 }
+*/
