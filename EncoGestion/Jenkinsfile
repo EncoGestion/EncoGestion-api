@@ -48,10 +48,11 @@ pipeline {
             steps {
                 dir('EncoGestion') {
                     script {
+                        def dockerImageName = "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
                         if (isUnix()) {
-                            sh 'docker build -t "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}" .'
+                            sh "docker build -t ${dockerImageName} ."
                         } else {
-                            bat 'docker build -t "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}" .'
+                            bat "docker build -t ${dockerImageName} ."
                         }
                     }
                 }
@@ -61,11 +62,12 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKER_CREDENTIALS_ID) {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        def dockerImageName = "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
                         if (isUnix()) {
-                            sh 'docker push "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"'
+                            sh "docker push ${dockerImageName}"
                         } else {
-                            bat 'docker push "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"'
+                            bat "docker push ${dockerImageName}"
                         }
                     }
                 }
