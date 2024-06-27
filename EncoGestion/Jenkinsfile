@@ -22,9 +22,9 @@ pipeline {
                 dir('EncoGestion') {
                     script {
                         if (isUnix()) {
-                            sh 'mvn package'
+                            sh 'mvn clean package -DskipTests'
                         } else {
-                            bat 'mvn package'
+                            bat 'mvn clean package -DskipTests'
                         }
                     }
                 }
@@ -33,28 +33,29 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir("EncoGestion"){
-
-                }
-                script {
-                    if (isUnix()) {
-                        sh 'mvn test'
-                    } else {
-                        bat 'mvn test'
+                dir('EncoGestion') {
+                    script {
+                        if (isUnix()) {
+                            sh 'mvn test'
+                        } else {
+                            bat 'mvn test'
+                        }
                     }
                 }
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'EncoGestion/target/surefire-reports/*.xml'
                 }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    dockerImage = docker.build("${env.DOCKER_REGISTRY}/encogestion-api:${env.BUILD_NUMBER}")
+                dir('EncoGestion') {
+                    script {
+                        dockerImage = docker.build("${env.DOCKER_REGISTRY}/my-api-app:${env.BUILD_NUMBER}")
+                    }
                 }
             }
         }
@@ -71,9 +72,11 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
-                    sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} set image deployment/encogestion-api encogestion-api=${env.DOCKER_REGISTRY}/encogestion-api:${env.BUILD_NUMBER}"
+                dir('EncoGestion') {
+                    script {
+                        sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
+                        sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} set image deployment/my-api-app my-api-app=${env.DOCKER_REGISTRY}/my-api-app:${env.BUILD_NUMBER}"
+                    }
                 }
             }
         }
