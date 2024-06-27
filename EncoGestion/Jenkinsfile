@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-credentials-id') {
-                        def dockerImageName = "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
+                        def dockerImageName = "${DOCKER_REGISTRY}-encogestion_api:${BUILD_NUMBER}"
                         if (isUnix()) {
                             sh "docker push ${dockerImageName}"
                         } else {
