@@ -20,11 +20,25 @@ public class OpenApiConfig {
     @Value("${http://localhost:8080/api/v1}")
     private String devUrl;
 
+    @Value("${http://garcia.com/api/v1}")
+    private String prodUrl;
+
+    @Value("${http://test/garcia.com/api/v1}")
+    private String testUrl;
+
     @Bean
     public OpenAPI myOpenAPI(){
 
         Server devServer = new Server();
         devServer.setUrl(devUrl);
+        devServer.setDescription("Server URL in Development environment");
+
+        Server prodServer = new Server();
+        devServer.setUrl(prodUrl);
+        devServer.setDescription("Server URL in Development environment");
+
+        Server testServer = new Server();
+        devServer.setUrl(testUrl);
         devServer.setDescription("Server URL in Development environment");
 
         Contact contact = new Contact();
@@ -42,6 +56,6 @@ public class OpenApiConfig {
                 .termsOfService("https://encogestion.github.io/")
                 .license(mitLicense);
 
-        return new OpenAPI().info(info).servers(List.of(devServer));
+        return new OpenAPI().info(info).servers(List.of(prodServer, testServer, devServer));
     }
 }
