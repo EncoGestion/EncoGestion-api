@@ -35,7 +35,7 @@ public class EncomiendaControllerIntegrationTest {
 
     @Test
     public void testBucarEncomiendasDeClientePorFecha() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/fecha/{clienteID}", "60928285")
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/fecha/{clienteID}", "82763512")
                         .param("fecha", "2024-06-27"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -50,7 +50,7 @@ public class EncomiendaControllerIntegrationTest {
     @Test
     public void testAsignarEncomiendasPorProOrigen() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/asignacion/{idRepartidor}", "32988754")
-                        .param("proOrigen", "Lima"))
+                        .param("proOrigen", "Trujillo"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -77,7 +77,7 @@ public class EncomiendaControllerIntegrationTest {
         ActualizarEstadoEncomiendaDTO actualizarEstadoDTO = new ActualizarEstadoEncomiendaDTO();
         actualizarEstadoDTO.setEstado("Entregado");
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/encomiendas/{id}/estado", "100")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/encomiendas/{id}/estado", "253201")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(actualizarEstadoDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -85,9 +85,9 @@ public class EncomiendaControllerIntegrationTest {
 
     @Test
     public void testConsultarEstado() throws Exception{
-        Long id = 1L;
+        Long id = 253201L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/{id}/consultar", id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/{id}/consultar", "253201"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
