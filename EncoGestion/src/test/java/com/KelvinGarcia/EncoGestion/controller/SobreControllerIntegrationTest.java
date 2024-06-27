@@ -23,7 +23,7 @@ public class SobreControllerIntegrationTest {
         SobreRequestDTO sobreRequestDTO = new SobreRequestDTO();
         sobreRequestDTO.setPeso((float) 3.5);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/sobres/{id}", "299304")
+        mockMvc.perform(MockMvcRequestBuilders.post("/sobres/{id}", "508399")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(sobreRequestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());

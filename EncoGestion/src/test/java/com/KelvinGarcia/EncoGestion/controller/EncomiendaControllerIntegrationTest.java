@@ -75,7 +75,7 @@ public class EncomiendaControllerIntegrationTest {
     @Test
     public void testNotificarAutomaticamente() throws Exception {
         ActualizarEstadoEncomiendaDTO actualizarEstadoDTO = new ActualizarEstadoEncomiendaDTO();
-        actualizarEstadoDTO.setEstado("Entregado");
+        actualizarEstadoDTO.setEstado("En camino");
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/encomiendas/{id}/estado", "253201")
                         .contentType(MediaType.APPLICATION_JSON)
