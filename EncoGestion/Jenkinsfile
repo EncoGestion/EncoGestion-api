@@ -11,20 +11,14 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
                 dir('EncoGestion') {
                     script {
                         if (isUnix()) {
-                            sh 'mvn clean package -DskipTests'
+                            sh 'mvn package'
                         } else {
-                            bat 'mvn clean package -DskipTests'
+                            bat 'mvn package'
                         }
                     }
                 }
@@ -54,7 +48,7 @@ pipeline {
             steps {
                 dir('EncoGestion') {
                     script {
-                        dockerImage = docker.build("${env.DOCKER_REGISTRY}/my-api-app:${env.BUILD_NUMBER}")
+                        dockerImage = docker.build("${env.DOCKER_REGISTRY}/encogestion_api:${env.BUILD_NUMBER}")
                     }
                 }
             }
@@ -75,7 +69,7 @@ pipeline {
                 dir('EncoGestion') {
                     script {
                         sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
-                        sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} set image deployment/my-api-app my-api-app=${env.DOCKER_REGISTRY}/my-api-app:${env.BUILD_NUMBER}"
+                        sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${env.DOCKER_REGISTRY}/encogestion_api:${env.BUILD_NUMBER}"
                     }
                 }
             }
