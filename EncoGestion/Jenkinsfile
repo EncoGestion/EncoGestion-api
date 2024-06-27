@@ -19,13 +19,30 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn package'
+                script {
+                    if (isUnix()) {
+                        sh 'mvn package'
+                    } else {
+                        bat 'mvn package'
+                    }
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                script {
+                    if (isUnix()) {
+                        sh 'mvn test'
+                    } else {
+                        bat 'mvn test'
+                    }
+                }
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
@@ -54,12 +71,6 @@ pipeline {
                     sh "kubectl --namespace=${env.KUBERNETES_NAMESPACE} set image deployment/encogestion-api encogestion-api=${env.DOCKER_REGISTRY}/encogestion-api:${env.BUILD_NUMBER}"
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            junit 'target/surefire-reports/*.xml'
         }
     }
 }
