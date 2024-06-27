@@ -23,33 +23,33 @@ public class EncomiendaControllerIntegrationTest {
 
     @Test
     public void testObtenerEncomiendasDelCliente() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/{id}", "75074590"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/{id}", "82763512"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testObtenerEncomiendasDelRepartidor() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/{id}", "95624875"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/{id}", "32988754"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testBucarEncomiendasDeClientePorFecha() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/fecha/{clienteID}", "75074590")
-                        .param("fecha", "2024-06-15"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/clientes/fecha/{clienteID}", "60928285")
+                        .param("fecha", "2024-06-27"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testBuscarEncomiendasDeRepartidorPorFecha() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/fecha/{repartidorID}", "95624875")
-                        .param("fecha", "2024-06-15"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/fecha/{repartidorID}", "32988754")
+                        .param("fecha", "2024-06-27"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void testAsignarEncomiendasPorProOrigen() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/asignacion/{idRepartidor}", "95624875")
+        mockMvc.perform(MockMvcRequestBuilders.get("/encomiendas/repartidores/asignacion/{idRepartidor}", "32988754")
                         .param("proOrigen", "Lima"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -64,9 +64,9 @@ public class EncomiendaControllerIntegrationTest {
         encomiendaRequestDTO.setProDestino("Lima");
         encomiendaRequestDTO.setDisDestino("San Borja");
         encomiendaRequestDTO.setContraseña("12345");
-        encomiendaRequestDTO.setClienteDestinatario("75659832");
+        encomiendaRequestDTO.setClienteDestinatario("60928285");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/encomiendas/{idClienteRemitente}", "62539184")
+        mockMvc.perform(MockMvcRequestBuilders.post("/encomiendas/{idClienteRemitente}", "82763512")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(encomiendaRequestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
