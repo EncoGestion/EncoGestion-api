@@ -19,11 +19,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn package'
-                    } else {
-                        bat 'mvn package'
+                dir('EncoGestion') {
+                    script {
+                        if (isUnix()) {
+                            sh 'mvn package'
+                        } else {
+                            bat 'mvn package'
+                        }
                     }
                 }
             }
@@ -31,6 +33,9 @@ pipeline {
 
         stage('Test') {
             steps {
+                dir("EncoGestion"){
+
+                }
                 script {
                     if (isUnix()) {
                         sh 'mvn test'
