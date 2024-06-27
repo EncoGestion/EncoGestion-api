@@ -48,7 +48,7 @@ pipeline {
             steps {
                 dir('EncoGestion') {
                     script {
-                        def dockerImageName = "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
+                        def dockerImageName = "${DOCKER_REGISTRY}-encogestion_api:${BUILD_NUMBER}"
                         if (isUnix()) {
                             sh "docker build -t ${dockerImageName} ."
                         } else {
