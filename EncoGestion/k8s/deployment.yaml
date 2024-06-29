@@ -2,7 +2,7 @@ apiVersion: api/v1
 kind: Deployment
 metadata:
   name: encogestion_api
-  namespace: my-kubernetes-namespace
+  namespace: default
 spec:
   replicas: 3
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: encogestion_api
-          image: my-docker-registry-encogestion_api:latest
+          image: kelvingarcialopez/encogestion_api:latest
           ports:
             - containerPort: 8080
           env:
