@@ -6,6 +6,7 @@ pipeline {
         DOCKER_REPO = 'encogestion_api'
         DOCKER_CREDENTIALS_ID = 'docker-credentials-id'
         KUBERNETES_NAMESPACE = 'default'
+        KUBERNETES_CLUSTER_NAME = 'minikube'
         KUBERNETES_TOKEN_ID = 'kubernetes-token-id'
         SPRING_DATASOURCE_URL = 'jdbc:postgresql://dpg-cpue6ruehbks73efid30-a.oregon-postgres.render.com:5432/encogestion_db'
         SPRING_DATASOURCE_USERNAME = 'encogestion_db_user'
@@ -60,7 +61,7 @@ pipeline {
             steps {
                 dir('EncoGestion') {
                     script {
-                        def dockerImageName = "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
+                        def dockerImageName = "${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER}"
                         if (isUnix()) {
                             sh "docker build -t ${dockerImageName} ."
                         } else {
@@ -75,7 +76,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        def dockerImageName = "${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
+                        def dockerImageName = "${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER}"
                         if (isUnix()) {
                             sh "docker push ${dockerImageName}"
                         } else {
@@ -91,15 +92,21 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: KUBERNETES_TOKEN_ID, variable: 'KUBE_TOKEN')]) {
                         if (isUnix()) {
-                            sh 'kubectl config set-credentials jenkins --token=$KUBE_TOKEN'
-                            sh 'kubectl config set-context --current --user=jenkins'
-                            sh "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml --validate=false"
-                            sh "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER}"
+                            sh """
+                                kubectl config set-credentials jenkins --token=$KUBE_TOKEN
+                                kubectl config set-context jenkins-context --cluster=${KUBERNETES_CLUSTER_NAME} --user=jenkins --namespace=${KUBERNETES_NAMESPACE}
+                                kubectl config use-context jenkins-context
+                                kubectl apply -f k8s/deployment.yaml --validate=false
+                                kubectl set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER} --namespace=${KUBERNETES_NAMESPACE}
+                            """
                         } else {
-                            bat 'kubectl config set-credentials jenkins --token=%KUBE_TOKEN%'
-                            bat 'kubectl config set-context --current --user=jenkins'
-                            bat "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml --validate=false"
-                            bat "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER}"
+                            bat """
+                                kubectl config set-credentials jenkins --token=%KUBE_TOKEN%
+                                kubectl config set-context jenkins-context --cluster=%KUBERNETES_CLUSTER_NAME% --user=jenkins --namespace=%KUBERNETES_NAMESPACE%
+                                kubectl config use-context jenkins-context
+                                kubectl apply -f k8s/deployment.yaml --validate=false
+                                kubectl set image deployment/encogestion_api encogestion_api=%DOCKER_REGISTRY%/%DOCKER_REPO%:%BUILD_NUMBER% --namespace=%KUBERNETES_NAMESPACE%
+                            """
                         }
                     }
                 }
