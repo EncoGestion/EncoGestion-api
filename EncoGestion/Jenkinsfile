@@ -3,8 +3,10 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = 'kelvingarcialopez'
+        DOCKER_REPO = 'encogestion_api'
         DOCKER_CREDENTIALS_ID = 'docker-credentials-id'
-        KUBERNETES_NAMESPACE = 'my-kubernetes-namespace'
+        KUBERNETES_NAMESPACE = 'default'
+        KUBERNETES_TOKEN_ID = 'kubernetes-token-id'
         SPRING_DATASOURCE_URL = 'jdbc:postgresql://dpg-cpue6ruehbks73efid30-a.oregon-postgres.render.com:5432/encogestion_db'
         SPRING_DATASOURCE_USERNAME = 'encogestion_db_user'
         SPRING_DATASOURCE_PASSWORD = 'ZhXJ51Id3XodaGiBiZGbDP3AQVlUVnHq'
@@ -86,14 +88,18 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                dir('EncoGestion') {
-                    script {
+                script {
+                    withCredentials([string(credentialsId: KUBERNETES_TOKEN_ID, variable: 'KUBE_TOKEN')]) {
                         if (isUnix()) {
-                            sh "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
-                            sh "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
+                            sh 'kubectl config set-credentials jenkins --token=$KUBE_TOKEN'
+                            sh 'kubectl config set-context --current --user=jenkins'
+                            sh "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml --validate=false"
+                            sh "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER}"
                         } else {
-                            bat "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml"
-                            bat "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/encogestion_api:${BUILD_NUMBER}"
+                            bat 'kubectl config set-credentials jenkins --token=%KUBE_TOKEN%'
+                            bat 'kubectl config set-context --current --user=jenkins'
+                            bat "kubectl --namespace=${KUBERNETES_NAMESPACE} apply -f k8s/deployment.yaml --validate=false"
+                            bat "kubectl --namespace=${KUBERNETES_NAMESPACE} set image deployment/encogestion_api encogestion_api=${DOCKER_REGISTRY}/${DOCKER_REPO}:${BUILD_NUMBER}"
                         }
                     }
                 }
